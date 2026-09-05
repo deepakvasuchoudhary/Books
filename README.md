@@ -77,8 +77,17 @@ npm run build
 
 ## ✨ Features
 
-- **Personal Thoughts & Reflections**: Featured prominently in both Grid and Journal views.
-- **Instant Search & Deep Filtering**: Search across titles, authors, thoughts, quotes, and genres. Filter by reading status, star rating, and dynamically detected genres.
-- **Dual View Modes**: Cover Showcase (visual grid) and Reading Journal (editorial reading stream).
-- **Minimalist Light & Dark Mode**: Warm paper aesthetic in light mode, deep obsidian charcoal in dark mode.
-- **100% Static & Git-Backed**: Your notes and library are version-controlled in Git forever—no databases, no external lock-in.
+- **3D Hardcover Physical Book Aesthetics**: Tactile book covers featuring realistic spine folds, ambient depth shadows, paper page-edge textures, ribbon bookmarks, and hover tilt physics.
+- **Triple View Modes**:
+  - **3D Shelf Gallery**: Visual hardcover showcase on an atmospheric library shelf.
+  - **Editorial Reading Journal**: In-depth review spreads highlighting reader reflections, memorable passages, and synopses.
+  - **Compact Catalog Index**: High-density tabular index for rapid browsing and power sorting.
+- **Curator's Atelier & Spotlight**: Time-aware greeting, featured book spotlight with ambient colored aura, shuffleable quotes of inspiration, and quick sanctuary counters.
+- **Reading Journey & Milestones**: Annual reading goal tracker with inline editing, pages consumed, critical rating, and interactive multi-color genre spectrum bar.
+- **Interactive Live Curation**: Rate volumes directly, toggle favorites with celebratory confetti, change reading statuses, and write/edit personal marginalia in the browser (persisted to localStorage).
+- **Random Volume Discovery**: "Surprise Me" drawer with dice icon and confetti to discover unexpected reads.
+- **Deep Search & Multi-Filters**: Instant command search (`/`), status tabs, 5-Star Hall of Fame, dynamic genre pills, and multi-criteria sorting.
+- **Full Keyboard Navigation**: Press `/` to focus search, `R` to discover a random book, `←`/`→` to leaf through volume dossiers, and `ESC` to dismiss modals.
+- **Luxury Light & Dark Modes**: Warm paper ivory in light mode, deep atelier obsidian in dark mode.
+- **100% Static & Git-Backed**: Your notes and library remain version-controlled in Git forever—no databases, no external lock-in.
+
