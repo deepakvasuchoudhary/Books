@@ -9,6 +9,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+      // Fallback: If served directly from repository root on GitHub Pages:
+      if (location.hostname.endsWith('github.io') && !document.querySelector('script[src*="assets/index-"]')) {
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.crossOrigin = '';
+        link.href = '/Books/assets/index.css';
+        document.head.appendChild(link);
+        var s = document.createElement('script');
+        s.type = 'module';
+        s.crossOrigin = '';
+        s.src = '/Books/assets/index.js';
+        document.head.appendChild(s);
+      }
+    </script>
   </head>
   <body class="min-h-screen bg-[#faf8f5] text-[#1c1917] dark:bg-[#0c0e12] dark:text-[#f1f3f5] transition-colors duration-200 antialiased selection:bg-amber-500/20 selection:text-amber-900 dark:selection:text-amber-200">
     <div id="root"></div>
