@@ -1,458 +1,393 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { BOOKS } from './data/books';
-import { useLocalStorage } from './hooks/useLocalStorage';
-import { Navbar } from './components/Navbar';
-import { HeroSpotlight } from './components/HeroSpotlight';
-import { StatsBar } from './components/StatsBar';
-import { SearchAndFilter } from './components/SearchAndFilter';
-import { BookCard } from './components/BookCard';
-import { BookJournalRow } from './components/BookJournalRow';
-import { BookCompactRow } from './components/BookCompactRow';
-import { BookDetailModal } from './components/BookDetailModal';
-import { RandomBookModal } from './components/RandomBookModal';
-import { BookOpen, FilterX, BookMarked } from 'lucide-react';
-
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { BOOKS } from "./data/books";
+import { Sidebar } from "./components/Sidebar";
+import { TopHeader } from "./components/TopHeader";
+import { BentoHero } from "./components/BentoHero";
+import { BookCardBento } from "./components/BookCardBento";
+import { BookCoverWall } from "./components/BookCoverWall";
+import { BookTableCatalog } from "./components/BookTableCatalog";
+import { BookReaderDrawer } from "./components/BookReaderDrawer";
+import { RandomBookModal } from "./components/RandomBookModal";
+import { SearchX } from "lucide-react";
 
 export default function App() {
-  // User overrides stored persistently in localStorage (favorites, ratings, notes, status)
-  const [userOverrides, setUserOverrides] = useLocalStorage('folio_user_book_overrides_v2', {});
-
-  // Merge static curated books with user live overrides
-  const books = useMemo(() => {
-    return BOOKS.map((b) => {
-      const override = userOverrides[b.id];
-      if (!override) return b;
-      return { ...b, ...override };
-    });
-  }, [userOverrides]);
-
-  // Reading Goal & Preferences
-  const [readingGoal, setReadingGoal] = useLocalStorage('folio_reading_goal_v2', 20);
-  const [viewMode, setViewMode] = useLocalStorage('folio_view_mode_v2', 'grid');
-  const [showStats, setShowStats] = useLocalStorage('folio_show_stats_v2', true);
-
   // Theme Management (Light / Dark)
   const [theme, setTheme] = useState(() => {
-    const saved = window.localStorage.getItem('folio_theme');
+    const saved = window.localStorage.getItem("libris_theme") || window.localStorage.getItem("folio_theme");
     if (saved) return saved;
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   });
 
   useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove("dark");
     }
-    window.localStorage.setItem('folio_theme', theme);
+    window.localStorage.setItem("libris_theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
-  // Search & Filter State
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [selectedGenre, setSelectedGenre] = useState('all');
-  const [ratingFilter, setRatingFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('recent_read');
+  // View Mode: "bento" | "cover" | "table"
+  const [viewMode, setViewMode] = useState(() => {
+    return window.localStorage.getItem("libris_view_mode") || "bento";
+  });
 
-  // Modal States
-  const [detailBookId, setDetailBookId] = useState(null);
+  const handleViewModeChange = (mode) => {
+    setViewMode(mode);
+    window.localStorage.setItem("libris_view_mode", mode);
+  };
+
+  // Navigation & Filtering State
+  const [activeShelf, setActiveShelf] = useState("all");
+  const [selectedGenre, setSelectedGenre] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [ratingFilter, setRatingFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("recent_read");
+
+  // Mobile Sidebar State
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  // Selected Book for Drawer
+  const [selectedBook, setSelectedBook] = useState(null);
+
+  // Random Recommendation State
   const [isRandomModalOpen, setIsRandomModalOpen] = useState(false);
   const [randomBook, setRandomBook] = useState(null);
 
-  // Search input ref for keyboard shortcut '/'
+  // Search input ref for keyboard shortcut "/"
   const searchInputRef = useRef(null);
 
-  // User Curation Handlers
-  const handleToggleFavorite = useCallback((bookId) => {
-    setUserOverrides((prev) => {
-      const book = books.find((b) => b.id === bookId);
-      const isFav = !!book?.favorite;
-      return {
-        ...prev,
-        [bookId]: {
-          ...(prev[bookId] || {}),
-          favorite: !isFav,
-        },
-      };
-    });
-  }, [books, setUserOverrides]);
-
-  const handleUpdateRating = useCallback((bookId, rating) => {
-    setUserOverrides((prev) => ({
-      ...prev,
-      [bookId]: {
-        ...(prev[bookId] || {}),
-        rating,
-      },
-    }));
-  }, [setUserOverrides]);
-
-  const handleUpdateStatus = useCallback((bookId, status) => {
-    setUserOverrides((prev) => ({
-      ...prev,
-      [bookId]: {
-        ...(prev[bookId] || {}),
-        status,
-      },
-    }));
-  }, [setUserOverrides]);
-
-  const handleUpdateNotes = useCallback((bookId, myThoughts) => {
-    setUserOverrides((prev) => ({
-      ...prev,
-      [bookId]: {
-        ...(prev[bookId] || {}),
-        myThoughts,
-      },
-    }));
-  }, [setUserOverrides]);
-
-  // Available unique genres
-  const availableGenres = useMemo(() => {
-    const set = new Set();
-    books.forEach((b) => {
-      (b.genres || []).forEach((g) => {
-        if (g && g.trim()) set.add(g.trim());
-      });
-    });
-    return Array.from(set).sort();
-  }, [books]);
-
-  // Status counts
-  const counts = useMemo(() => {
-    return {
-      all: books.length,
-      read: books.filter((b) => b.status === 'read').length,
-      reading: books.filter((b) => b.status === 'reading').length,
-      want_to_read: books.filter((b) => b.status === 'want_to_read').length,
-      favorites: books.filter((b) => b.favorite).length,
-      five_stars: books.filter((b) => b.rating === 5).length,
-    };
-  }, [books]);
-
-  // Filtered and sorted books
-  const filteredBooks = useMemo(() => {
-    return books
-      .filter((book) => {
-        // Status filter
-        if (statusFilter === 'favorites' && !book.favorite) return false;
-        if (statusFilter === 'five_stars' && book.rating !== 5) return false;
-        if (
-          statusFilter !== 'all' &&
-          statusFilter !== 'favorites' &&
-          statusFilter !== 'five_stars' &&
-          book.status !== statusFilter
-        ) {
-          return false;
-        }
-
-        // Genre filter
-        if (selectedGenre !== 'all') {
-          if (!book.genres || !book.genres.includes(selectedGenre)) return false;
-        }
-
-        // Rating filter
-        if (ratingFilter !== 'all') {
-          const minRating = Number(ratingFilter);
-          if (ratingFilter === '5' && book.rating !== 5) return false;
-          if (book.rating < minRating) return false;
-        }
-
-        // Search query
-        if (searchQuery.trim()) {
-          const q = searchQuery.toLowerCase().trim();
-          const matchTitle = book.title?.toLowerCase().includes(q);
-          const matchAuthor = book.author?.toLowerCase().includes(q);
-          const matchThoughts = book.myThoughts?.toLowerCase().includes(q);
-          const matchDesc = book.description?.toLowerCase().includes(q);
-          const matchQuote = book.favoriteQuote?.toLowerCase().includes(q);
-          const matchYear = String(book.publishedYear || '').includes(q);
-          const matchGenre = book.genres?.some((g) => g.toLowerCase().includes(q));
-
-          if (!matchTitle && !matchAuthor && !matchThoughts && !matchDesc && !matchQuote && !matchYear && !matchGenre) {
-            return false;
-          }
-        }
-
-        return true;
-      })
-      .sort((a, b) => {
-        if (sortBy === 'rating_high') {
-          return (b.rating || 0) - (a.rating || 0);
-        }
-        if (sortBy === 'title_asc') {
-          return (a.title || '').localeCompare(b.title || '');
-        }
-        if (sortBy === 'author_asc') {
-          return (a.author || '').localeCompare(b.author || '');
-        }
-        if (sortBy === 'year_desc') {
-          return (Number(b.publishedYear) || 0) - (Number(a.publishedYear) || 0);
-        }
-        if (sortBy === 'year_asc') {
-          return (Number(a.publishedYear) || 0) - (Number(b.publishedYear) || 0);
-        }
-        // Default: recent_read
-        const dateA = a.dateRead || a.dateStarted || '1970-01-01';
-        const dateB = b.dateRead || b.dateStarted || '1970-01-01';
-        return dateB.localeCompare(dateA);
-      });
-  }, [books, statusFilter, selectedGenre, ratingFilter, searchQuery, sortBy]);
-
-  // Detail Modal Book & Leaf-through Navigation
-  const currentDetailIndex = useMemo(() => {
-    if (!detailBookId) return -1;
-    return filteredBooks.findIndex((b) => b.id === detailBookId);
-  }, [detailBookId, filteredBooks]);
-
-  const detailBook = useMemo(() => {
-    if (!detailBookId) return null;
-    return filteredBooks[currentDetailIndex] || books.find((b) => b.id === detailBookId) || null;
-  }, [detailBookId, currentDetailIndex, filteredBooks, books]);
-
-  const handleNextBook = useCallback(() => {
-    if (currentDetailIndex >= 0 && currentDetailIndex < filteredBooks.length - 1) {
-      setDetailBookId(filteredBooks[currentDetailIndex + 1].id);
-    }
-  }, [currentDetailIndex, filteredBooks]);
-
-  const handlePrevBook = useCallback(() => {
-    if (currentDetailIndex > 0) {
-      setDetailBookId(filteredBooks[currentDetailIndex - 1].id);
-    }
-  }, [currentDetailIndex, filteredBooks]);
-
-  // Random Discovery Trigger
-  const handleOpenRandomDiscovery = useCallback(() => {
-    const pool = filteredBooks.length > 0 ? filteredBooks : books;
-    if (pool.length === 0) return;
-    const randomIndex = Math.floor(Math.random() * pool.length);
-    setRandomBook(pool[randomIndex]);
-    setIsRandomModalOpen(true);
-  }, [filteredBooks, books]);
-
-  const handlePickAnotherRandom = useCallback(() => {
-    const pool = filteredBooks.length > 0 ? filteredBooks : books;
-    if (pool.length === 0) return;
-    let nextIndex = Math.floor(Math.random() * pool.length);
-    if (pool.length > 1 && pool[nextIndex]?.id === randomBook?.id) {
-      nextIndex = (nextIndex + 1) % pool.length;
-    }
-    setRandomBook(pool[nextIndex]);
-  }, [filteredBooks, books, randomBook]);
-
-  // Keyboard Shortcuts: '/' to focus search, 'R' for random discovery
+  // Global Keyboard Shortcuts
   useEffect(() => {
-    const handleGlobalKeyDown = (e) => {
-      const target = e.target;
-      const isInput =
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.isContentEditable;
-
-      if (!isInput) {
-        if (e.key === '/') {
-          e.preventDefault();
-          searchInputRef.current?.focus();
-        } else if (e.key.toLowerCase() === 'r' && !detailBookId && !isRandomModalOpen) {
-          e.preventDefault();
-          handleOpenRandomDiscovery();
-        }
+    const handleKeyDown = (e) => {
+      // Focus search with "/" or "⌘K" / "Ctrl+K"
+      if (
+        (e.key === "/" || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k")) &&
+        document.activeElement?.tagName !== "INPUT" &&
+        document.activeElement?.tagName !== "TEXTAREA"
+      ) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
       }
     };
 
-    window.addEventListener('keydown', handleGlobalKeyDown);
-    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [detailBookId, isRandomModalOpen, handleOpenRandomDiscovery]);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Shelf Counts
+  const counts = useMemo(() => {
+    return {
+      all: BOOKS.length,
+      reading: BOOKS.filter((b) => b.status === "reading").length,
+      read: BOOKS.filter((b) => b.status === "read").length,
+      want_to_read: BOOKS.filter((b) => b.status === "want_to_read").length,
+      five_stars: BOOKS.filter((b) => b.rating === 5).length,
+      favorites: BOOKS.filter((b) => b.favorite).length,
+    };
+  }, []);
+
+  // Available unique genres & genre counts
+  const { availableGenres, genreCounts } = useMemo(() => {
+    const countsMap = {};
+    const set = new Set();
+
+    BOOKS.forEach((b) => {
+      (b.genres || []).forEach((g) => {
+        if (g && g.trim()) {
+          const trimmed = g.trim();
+          set.add(trimmed);
+          countsMap[trimmed] = (countsMap[trimmed] || 0) + 1;
+        }
+      });
+    });
+
+    return {
+      availableGenres: Array.from(set).sort(),
+      genreCounts: countsMap,
+    };
+  }, []);
+
+  // Filtered and Sorted Books
+  const filteredBooks = useMemo(() => {
+    return BOOKS.filter((book) => {
+      // Shelf Filter
+      if (activeShelf === "reading" && book.status !== "reading") return false;
+      if (activeShelf === "read" && book.status !== "read") return false;
+      if (activeShelf === "want_to_read" && book.status !== "want_to_read") return false;
+      if (activeShelf === "five_stars" && book.rating !== 5) return false;
+      if (activeShelf === "favorites" && !book.favorite) return false;
+
+      // Genre Filter
+      if (selectedGenre !== "all") {
+        if (!book.genres || !book.genres.includes(selectedGenre)) return false;
+      }
+
+      // Rating Filter
+      if (ratingFilter !== "all") {
+        const minRating = Number(ratingFilter);
+        if (book.rating < minRating) return false;
+      }
+
+      // Search Query
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        const matchTitle = book.title?.toLowerCase().includes(q);
+        const matchAuthor = book.author?.toLowerCase().includes(q);
+        const matchDesc = book.description?.toLowerCase().includes(q);
+        const matchThoughts = book.myThoughts?.toLowerCase().includes(q);
+        const matchQuote = book.favoriteQuote?.toLowerCase().includes(q);
+        const matchYear = String(book.publishedYear || "").includes(q);
+        const matchGenre = book.genres?.some((g) => g.toLowerCase().includes(q));
+
+        if (!matchTitle && !matchAuthor && !matchDesc && !matchThoughts && !matchQuote && !matchYear && !matchGenre) {
+          return false;
+        }
+      }
+
+      return true;
+    }).sort((a, b) => {
+      if (sortBy === "rating_high") {
+        return (b.rating || 0) - (a.rating || 0);
+      }
+      if (sortBy === "title_asc") {
+        return (a.title || "").localeCompare(b.title || "");
+      }
+      if (sortBy === "author_asc") {
+        return (a.author || "").localeCompare(b.author || "");
+      }
+      if (sortBy === "year_desc") {
+        return (Number(b.publishedYear) || 0) - (Number(a.publishedYear) || 0);
+      }
+      if (sortBy === "year_asc") {
+        return (Number(a.publishedYear) || 0) - (Number(b.publishedYear) || 0);
+      }
+      // Default: preserve catalog order
+      return 0;
+    });
+  }, [activeShelf, selectedGenre, ratingFilter, searchQuery, sortBy]);
+
+  // Featured Spotlight Volume for Bento Hero
+  const spotlightBook = useMemo(() => {
+    return BOOKS.find((b) => b.id === "the-courage-to-be-disliked") || BOOKS[0];
+  }, []);
+
+  // Shelf Labels
+  const activeShelfLabel = useMemo(() => {
+    switch (activeShelf) {
+      case "reading":
+        return "Currently Reading";
+      case "read":
+        return "Completed Archive";
+      case "want_to_read":
+        return "Reading Queue";
+      case "five_stars":
+        return "5-Star Hall of Fame";
+      case "favorites":
+        return "Curator's Favorites";
+      default:
+        return "All Library Volumes";
+    }
+  }, [activeShelf]);
+
+  // Drawer Next / Prev Navigation
+  const currentBookIndex = useMemo(() => {
+    if (!selectedBook) return -1;
+    return filteredBooks.findIndex((b) => b.id === selectedBook.id);
+  }, [selectedBook, filteredBooks]);
+
+  const hasNext = currentBookIndex >= 0 && currentBookIndex < filteredBooks.length - 1;
+  const hasPrev = currentBookIndex > 0;
+
+  const handleNextBook = useCallback(() => {
+    if (hasNext) {
+      setSelectedBook(filteredBooks[currentBookIndex + 1]);
+    }
+  }, [hasNext, currentBookIndex, filteredBooks]);
+
+  const handlePrevBook = useCallback(() => {
+    if (hasPrev) {
+      setSelectedBook(filteredBooks[currentBookIndex - 1]);
+    }
+  }, [hasPrev, currentBookIndex, filteredBooks]);
+
+  // Random Book Picker Handler
+  const handleOpenRandom = () => {
+    const pool = filteredBooks.length > 0 ? filteredBooks : BOOKS;
+    const randomIndex = Math.floor(Math.random() * pool.length);
+    setRandomBook(pool[randomIndex]);
+    setIsRandomModalOpen(true);
+  };
+
+  const handlePickAnotherRandom = () => {
+    const pool = filteredBooks.length > 0 ? filteredBooks : BOOKS;
+    let nextIndex = Math.floor(Math.random() * pool.length);
+    if (pool.length > 1 && pool[nextIndex].id === randomBook?.id) {
+      nextIndex = (nextIndex + 1) % pool.length;
+    }
+    setRandomBook(pool[nextIndex]);
+  };
+
+  const isFiltered = activeShelf !== "all" || selectedGenre !== "all" || ratingFilter !== "all" || searchQuery !== "";
 
   const handleResetFilters = () => {
-    setSearchQuery('');
-    setStatusFilter('all');
-    setSelectedGenre('all');
-    setRatingFilter('all');
+    setActiveShelf("all");
+    setSelectedGenre("all");
+    setRatingFilter("all");
+    setSearchQuery("");
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#faf8f5] dark:bg-[#0b0d13] text-stone-900 dark:text-stone-100 transition-colors duration-200 selection:bg-amber-500/25 selection:text-amber-900 dark:selection:text-amber-200">
-      {/* Navigation Bar */}
-      <Navbar
+    <div className="min-h-screen bg-slate-50 dark:bg-[#090a0f] text-slate-900 dark:text-zinc-100 flex transition-colors duration-200">
+      {/* 1. Sleek Modern Sidebar */}
+      <Sidebar
+        isOpen={isMobileSidebarOpen}
+        onClose={() => setIsMobileSidebarOpen(false)}
+        activeShelf={activeShelf}
+        onSelectShelf={setActiveShelf}
+        selectedGenre={selectedGenre}
+        onSelectGenre={setSelectedGenre}
+        availableGenres={availableGenres}
+        counts={counts}
+        genreCounts={genreCounts}
+        onOpenRandom={handleOpenRandom}
         theme={theme}
         onToggleTheme={toggleTheme}
-        showStats={showStats}
-        onToggleStats={() => setShowStats(!showStats)}
-        totalCount={books.length}
-        onOpenRandom={handleOpenRandomDiscovery}
-        onFocusSearch={() => searchInputRef.current?.focus()}
+        onOpenSearch={() => searchInputRef.current?.focus()}
       />
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
-        {/* Atmospheric Literary Header & Featured Spotlight */}
-        <HeroSpotlight
-          books={books}
-          onSelectBook={(b) => setDetailBookId(b.id)}
-          onOpenRandomModal={handleOpenRandomDiscovery}
-          totalBooksCount={books.length}
-          finishedCount={counts.read}
+      {/* 2. Main Content Canvas */}
+      <div className="flex-1 lg:pl-72 flex flex-col min-w-0 min-h-screen">
+        {/* Modern Sticky Top Bar */}
+        <TopHeader
+          onOpenMobileMenu={() => setIsMobileSidebarOpen(true)}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          searchInputRef={searchInputRef}
+          viewMode={viewMode}
+          onViewModeChange={handleViewModeChange}
+          sortBy={sortBy}
+          onSortByChange={setSortBy}
+          activeShelfLabel={activeShelfLabel}
+          totalResults={filteredBooks.length}
+          selectedGenre={selectedGenre}
+          onSelectGenre={setSelectedGenre}
+          ratingFilter={ratingFilter}
+          onRatingFilterChange={setRatingFilter}
+          onResetFilters={handleResetFilters}
+          isFiltered={isFiltered}
         />
 
-        {/* Reading Journey Dossier / Stats Bar (Collapsible) */}
-        {showStats && (
-          <StatsBar
-            books={books}
-            readingGoal={readingGoal}
-            onUpdateReadingGoal={(goal) => setReadingGoal(goal)}
-            onSelectGenre={(genre) => setSelectedGenre(genre)}
-            onSelectStatus={(status) => setStatusFilter(status)}
+        {/* Bento Hero Section (Shown when no active search query or genre filter) */}
+        {!isFiltered && (
+          <BentoHero
+            spotlightBook={spotlightBook}
+            onSelectBook={setSelectedBook}
+            counts={counts}
+            availableGenres={availableGenres}
+            selectedGenre={selectedGenre}
+            onSelectGenre={setSelectedGenre}
           />
         )}
 
-        {/* Search, Filter & 3-Mode View Controls */}
-        <SearchAndFilter
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          statusFilter={statusFilter}
-          onStatusFilterChange={setStatusFilter}
-          selectedGenre={selectedGenre}
-          onGenreSelect={setSelectedGenre}
-          availableGenres={availableGenres}
-          ratingFilter={ratingFilter}
-          onRatingFilterChange={setRatingFilter}
-          sortBy={sortBy}
-          onSortByChange={setSortBy}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
-          counts={counts}
-          filteredCount={filteredBooks.length}
-          onResetFilters={handleResetFilters}
-          searchInputRef={searchInputRef}
-        />
+        {/* Main Books Presentation Area */}
+        <main className="flex-1 p-4 sm:p-6">
+          {filteredBooks.length > 0 ? (
+            <>
+              {/* Layout 1: Bento Grid View */}
+              {viewMode === "bento" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+                  {filteredBooks.map((book) => (
+                    <BookCardBento
+                      key={book.id}
+                      book={book}
+                      onSelectBook={setSelectedBook}
+                    />
+                  ))}
+                </div>
+              )}
 
-        {/* Books Presentation by Selected View Mode */}
-        {filteredBooks.length === 0 ? (
-          /* Empty State */
-          <div className="py-20 text-center border border-dashed border-stone-300 dark:border-stone-800 rounded-3xl p-8 bg-white/50 dark:bg-[#131620]/50">
-            <div className="w-16 h-16 rounded-2xl bg-amber-500/10 dark:bg-amber-400/10 flex items-center justify-center text-amber-700 dark:text-amber-400 mx-auto mb-4">
-              <BookMarked size={32} />
-            </div>
-            <h3 className="font-serif font-bold text-2xl text-stone-900 dark:text-stone-100">
-              No Matching Volumes Found
-            </h3>
-            <p className="text-sm text-stone-500 dark:text-stone-400 mt-2 max-w-md mx-auto font-sans leading-relaxed">
-              We couldn't find any works matching your criteria. Try adjusting keywords or clearing active filters.
-            </p>
-            <div className="mt-6 flex justify-center">
+              {/* Layout 2: Apple Books Cover Gallery Wall */}
+              {viewMode === "cover" && (
+                <BookCoverWall
+                  books={filteredBooks}
+                  onSelectBook={setSelectedBook}
+                />
+              )}
+
+              {/* Layout 3: Linear Table Catalog */}
+              {viewMode === "table" && (
+                <BookTableCatalog
+                  books={filteredBooks}
+                  onSelectBook={setSelectedBook}
+                />
+              )}
+            </>
+          ) : (
+            /* Empty State */
+            <div className="py-20 text-center space-y-4 max-w-md mx-auto">
+              <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.08] flex items-center justify-center mx-auto text-slate-400 dark:text-zinc-500">
+                <SearchX size={26} />
+              </div>
+
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  No matching books found
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-zinc-400">
+                  We couldn't find any volume matching your current search or filters.
+                </p>
+              </div>
+
               <button
-                type="button"
                 onClick={handleResetFilters}
-                className="px-5 py-2.5 text-xs font-semibold rounded-xl bg-amber-700 hover:bg-amber-800 text-white shadow-sm shadow-amber-900/20 transition-all flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
               >
-                <FilterX size={14} />
-                <span>Reset All Filters</span>
+                Reset All Filters
               </button>
             </div>
-          </div>
-        ) : viewMode === 'grid' ? (
-          /* 1. Visual 3D Hardcover Shelf Gallery */
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-            {filteredBooks.map((book) => (
-              <BookCard
-                key={book.id}
-                book={book}
-                onSelect={(b) => setDetailBookId(b.id)}
-                onToggleFavorite={handleToggleFavorite}
-              />
-            ))}
-          </div>
-        ) : viewMode === 'journal' ? (
-          /* 2. Editorial Reading Journal Review Spread */
-          <div className="space-y-5">
-            {filteredBooks.map((book) => (
-              <BookJournalRow
-                key={book.id}
-                book={book}
-                onSelect={(b) => setDetailBookId(b.id)}
-                onToggleFavorite={handleToggleFavorite}
-              />
-            ))}
-          </div>
-        ) : (
-          /* 3. Compact Catalog Index View */
-          <div className="space-y-2">
-            {filteredBooks.map((book, index) => (
-              <BookCompactRow
-                key={book.id}
-                book={book}
-                index={index}
-                onSelect={(b) => setDetailBookId(b.id)}
-                onToggleFavorite={handleToggleFavorite}
-              />
-            ))}
-          </div>
-        )}
-      </main>
+          )}
+        </main>
 
-      {/* Literary Editorial Footer */}
-      <footer className="mt-20 border-t border-stone-200/80 dark:border-stone-800/80 py-10 bg-white/50 dark:bg-[#0e1119]/50 backdrop-blur-sm text-xs text-stone-500 dark:text-stone-400">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
-            <div className="w-6 h-6 rounded-lg bg-amber-700 text-white flex items-center justify-center">
-              <BookOpen size={14} />
-            </div>
-            <span className="font-serif font-bold text-stone-900 dark:text-stone-100 text-sm">
-              Folio Atelier
-            </span>
-            <span className="text-stone-400">— Personal Reading Sanctuary & Journal</span>
-          </div>
-
-          <div className="flex items-center gap-4 text-[11px] font-mono text-stone-400">
-            <span>{books.length} Curated Volumes</span>
+        {/* Modern Minimalist Footer */}
+        <footer className="px-6 py-5 border-t border-slate-200/80 dark:border-white/[0.08] text-xs text-slate-500 dark:text-zinc-500 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2 font-medium">
+            <span className="font-bold text-slate-800 dark:text-zinc-300">LIBRIS</span>
             <span>•</span>
-            <span>Static Git Archive</span>
-            <span>•</span>
-            <a
-              href="https://github.com/deepakvasuchoudhary/Books"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-amber-700 dark:text-amber-400 hover:underline"
-            >
-              Source Repository
-            </a>
+            <span>Deepak Choudhary's Reading Vault</span>
           </div>
-        </div>
-      </footer>
 
-      {/* Interactive Volume Dossier Modal */}
-      <BookDetailModal
-        book={detailBook}
-        isOpen={!!detailBook}
-        onClose={() => setDetailBookId(null)}
+          <div className="flex items-center gap-4 text-[11px] font-mono">
+            <span>81 Volumes Indexed</span>
+            <span>•</span>
+            <span>100% Curated</span>
+          </div>
+        </footer>
+      </div>
+
+      {/* 3. Slide-Over Reader Drawer (NO edit/add/delete options) */}
+      <BookReaderDrawer
+        book={selectedBook}
+        isOpen={!!selectedBook}
+        onClose={() => setSelectedBook(null)}
         onNextBook={handleNextBook}
         onPrevBook={handlePrevBook}
-        hasNext={currentDetailIndex >= 0 && currentDetailIndex < filteredBooks.length - 1}
-        hasPrev={currentDetailIndex > 0}
-        onToggleFavorite={handleToggleFavorite}
-        onUpdateRating={handleUpdateRating}
-        onUpdateStatus={handleUpdateStatus}
-        onUpdateNotes={handleUpdateNotes}
+        hasNext={hasNext}
+        hasPrev={hasPrev}
       />
 
-      {/* Random Book Discovery Modal with Confetti */}
+      {/* 4. Random Discovery Modal */}
       <RandomBookModal
         isOpen={isRandomModalOpen}
         book={randomBook}
         onClose={() => setIsRandomModalOpen(false)}
         onPickAnother={handlePickAnotherRandom}
-        onSelectBook={(b) => {
-          setIsRandomModalOpen(false);
-          setDetailBookId(b.id);
-        }}
+        onSelectBook={setSelectedBook}
       />
     </div>
   );
 }
-

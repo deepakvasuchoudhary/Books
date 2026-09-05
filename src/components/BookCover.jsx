@@ -5,40 +5,35 @@ export function BookCover({
   coverUrl,
   title,
   author,
-  gradient = 'from-amber-950 via-stone-900 to-black',
+  gradient = 'from-indigo-900 via-slate-900 to-zinc-950',
   size = 'md',
-  ribbon = false,
   showEdge = true,
   className = '',
 }) {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Size styles
   const sizeClasses = {
-    xs: 'w-12 h-16 text-[10px] rounded-[3px]',
-    sm: 'w-20 h-28 text-xs rounded-[4px]',
-    md: 'w-36 h-52 sm:w-40 sm:h-56 text-sm rounded-md',
-    lg: 'w-52 h-76 sm:w-60 sm:h-88 text-base rounded-lg',
-    xl: 'w-64 h-96 sm:w-72 sm:h-[430px] text-lg rounded-xl',
+    xs: 'w-10 h-14 text-[9px] rounded-[4px]',
+    sm: 'w-16 h-24 text-[10px] rounded-md',
+    md: 'w-32 h-48 sm:w-36 sm:h-52 text-xs rounded-lg',
+    lg: 'w-48 h-72 sm:w-52 sm:h-80 text-sm rounded-xl',
+    xl: 'w-56 h-84 sm:w-64 sm:h-96 text-base rounded-2xl',
   };
 
   const showFallback = !coverUrl || hasError;
 
   return (
     <div
-      className={`relative select-none book-shadow-3d book-spine-effect ${showEdge ? 'book-page-edge' : ''} transition-all duration-300 ${sizeClasses[size] || sizeClasses.md} ${className}`}
+      className={`relative select-none book-shadow-modern book-spine-effect ${showEdge ? 'book-page-edge' : ''} transition-all duration-300 ${sizeClasses[size] || sizeClasses.md} ${className}`}
     >
-      {/* Optional Ribbon Bookmark */}
-      {ribbon && <div className="ribbon-bookmark" title="Bookmarked" />}
-
-      {/* Book Cover Container */}
-      <div className="w-full h-full rounded-[inherit] overflow-hidden relative bg-stone-100 dark:bg-stone-900">
+      {/* Container with rounded corner clip */}
+      <div className="w-full h-full rounded-[inherit] overflow-hidden relative bg-slate-100 dark:bg-zinc-900 border border-black/5 dark:border-white/10">
         {!showFallback ? (
           <>
             {isLoading && (
-              <div className="absolute inset-0 bg-stone-200 dark:bg-stone-800 animate-pulse flex items-center justify-center">
-                <BookIcon className="w-6 h-6 text-stone-400/50 animate-pulse" />
+              <div className="absolute inset-0 bg-slate-200 dark:bg-zinc-800 animate-pulse flex items-center justify-center">
+                <BookIcon className="w-5 h-5 text-slate-400 dark:text-zinc-600" />
               </div>
             )}
             <img
@@ -54,36 +49,34 @@ export function BookCover({
             />
           </>
         ) : (
-          /* Luxury Typographic Hardcover Fallback */
+          /* Modern Minimalist Typographic Cover Fallback */
           <div
-            className={`w-full h-full bg-gradient-to-br ${gradient} p-4 flex flex-col justify-between text-amber-50 shadow-inner relative overflow-hidden`}
+            className={`w-full h-full bg-gradient-to-br ${gradient} p-3.5 flex flex-col justify-between text-white relative overflow-hidden`}
           >
-            {/* Subtle linen/woven cloth background texture */}
-            <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:10px_10px] pointer-events-none" />
-            
-            {/* Foil stamped inner frame border */}
-            <div className="absolute inset-2 border border-amber-400/30 rounded-[3px] pointer-events-none" />
+            {/* Subtle grid pattern */}
+            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
 
-            {/* Top literary crest & ornament */}
-            <div className="pt-2 z-10 flex items-center justify-between">
-              <span className="text-amber-400/80 font-serif text-xs">✦</span>
-              <span className="text-[9px] uppercase tracking-widest font-mono text-amber-300/60">Edition</span>
+            {/* Header chip */}
+            <div className="z-10 flex items-center justify-between">
+              <span className="text-[9px] font-mono tracking-wider uppercase px-1.5 py-0.5 rounded bg-white/10 text-white/80 font-medium">
+                Vault Edition
+              </span>
             </div>
 
-            {/* Center Book title in Newsreader serif typography */}
-            <div className="my-auto z-10 pr-2 pl-1">
-              <h4 className="font-serif font-bold text-sm sm:text-base leading-snug line-clamp-3 text-amber-50 drop-shadow-sm tracking-tight">
+            {/* Title & Author */}
+            <div className="my-auto z-10 pr-1">
+              <h4 className="font-semibold text-xs sm:text-sm leading-snug line-clamp-3 text-white tracking-tight">
                 {title}
               </h4>
-              <p className="text-[11px] text-amber-200/80 font-sans mt-2 line-clamp-2 tracking-wider uppercase font-medium">
+              <p className="text-[11px] text-white/70 font-sans mt-1.5 line-clamp-1 font-medium">
                 {author}
               </p>
             </div>
 
-            {/* Bottom atelier badge */}
-            <div className="pb-1 z-10 flex items-center justify-between text-[9px] text-amber-300/70 font-mono border-t border-amber-400/20 pt-1.5">
-              <span>FOLIO</span>
-              <span className="text-amber-400/80">❦</span>
+            {/* Bottom identifier */}
+            <div className="z-10 flex items-center justify-between text-[9px] text-white/50 font-mono pt-2 border-t border-white/10">
+              <span>LIBRIS</span>
+              <span>●</span>
             </div>
           </div>
         )}
@@ -91,4 +84,5 @@ export function BookCover({
     </div>
   );
 }
+
 
