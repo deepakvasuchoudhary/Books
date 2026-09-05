@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Newsreader", Georgia, Cambria, "Times New Roman", serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+  }
+}
+
+/* Book Cover Styling with realistic depth */
+.book-spine-effect {
+  position: relative;
+}
+.book-spine-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 14px;
+  background: linear-gradient(to right, rgba(0,0,0,0.3) 0%, rgba(255,255,255,0.15) 35%, rgba(0,0,0,0.2) 100%);
+  pointer-events: none;
+  z-index: 10;
+  border-top-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+}
+
+.book-shadow {
+  box-shadow: 
+    -4px 0 10px -2px rgba(0, 0, 0, 0.12),
+    0 12px 28px -4px rgba(0, 0, 0, 0.18),
+    0 6px 10px -4px rgba(0, 0, 0, 0.1);
+}
+
+.dark .book-shadow {
+  box-shadow: 
+    -4px 0 12px -2px rgba(0, 0, 0, 0.6),
+    0 16px 36px -4px rgba(0, 0, 0, 0.7),
+    0 8px 12px -4px rgba(0, 0, 0, 0.5);
+}
+
+/* Custom scrollbar styling for notes & modals */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
