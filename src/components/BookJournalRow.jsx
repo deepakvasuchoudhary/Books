@@ -3,7 +3,7 @@ import { BookCover } from './BookCover';
 import { StarRating } from './StarRating';
 import { Heart, Calendar, Quote, MessageSquare, ChevronRight } from 'lucide-react';
 
-export function BookJournalRow({ book, onSelect, onToggleFavorite }) {
+export function BookJournalRow({ book, onSelect }) {
   const statusLabels = {
     read: { text: 'Read', bg: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' },
     reading: { text: 'Reading', bg: 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300 border-amber-200 dark:border-amber-800' },
@@ -65,21 +65,14 @@ export function BookJournalRow({ book, onSelect, onToggleFavorite }) {
 
             {/* Favorite & Rating */}
             <div className="flex flex-col items-end gap-2 shrink-0">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleFavorite(book.id);
-                }}
-                className={`p-2 rounded-full transition-all duration-200 ${
-                  book.favorite
-                    ? 'text-rose-500 bg-rose-50 dark:bg-rose-950/60'
-                    : 'text-stone-400 hover:text-rose-500 hover:bg-stone-100 dark:hover:bg-stone-800'
-                }`}
-                title={book.favorite ? 'Favorited' : 'Add to favorites'}
-              >
-                <Heart size={18} className={book.favorite ? 'fill-rose-500' : ''} />
-              </button>
+              {book.favorite && (
+                <div
+                  className="p-1.5 rounded-full text-rose-500 bg-rose-50 dark:bg-rose-950/60"
+                  title="Favorite"
+                >
+                  <Heart size={16} className="fill-rose-500" />
+                </div>
+              )}
 
               <div className="flex items-center gap-1.5">
                 <StarRating rating={book.rating} size={15} />
@@ -92,7 +85,7 @@ export function BookJournalRow({ book, onSelect, onToggleFavorite }) {
             </div>
           </div>
 
-          {/* User's Thoughts & Reflections Section (Featured prominently) */}
+          {/* User's Thoughts & Reflections Section */}
           {book.myThoughts ? (
             <div className="mt-4 p-4 rounded-xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40">
               <div className="flex items-center gap-2 mb-1.5 text-amber-800 dark:text-amber-300 text-xs font-semibold uppercase tracking-wider">
@@ -105,11 +98,11 @@ export function BookJournalRow({ book, onSelect, onToggleFavorite }) {
             </div>
           ) : (
             <div className="mt-3 text-stone-400 text-xs italic">
-              No personal thoughts recorded yet. Click to add your notes.
+              No personal reflections recorded yet.
             </div>
           )}
 
-          {/* Favorite Quote (if any) */}
+          {/* Favorite Quote */}
           {book.favoriteQuote && (
             <div className="mt-3 flex items-start gap-2 text-stone-600 dark:text-stone-300 text-xs sm:text-sm italic font-serif">
               <Quote size={14} className="shrink-0 mt-1 text-stone-400 dark:text-stone-500" />
@@ -131,7 +124,7 @@ export function BookJournalRow({ book, onSelect, onToggleFavorite }) {
             </div>
 
             <div className="flex items-center text-amber-700 dark:text-amber-400 font-medium group-hover:translate-x-1 transition-transform">
-              <span>View full details</span>
+              <span>Read reflection & details</span>
               <ChevronRight size={14} />
             </div>
           </div>

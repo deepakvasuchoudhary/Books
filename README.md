@@ -1,64 +1,84 @@
-# 📖 Folio — Personal Reading Journal & Book Sanctuary
+# 📖 Folio — Personal Reading Journal & Shelf
 
-A minimal, aesthetically crafted personal bookshelf and reading journal designed for book lovers. Track every book you read, record heartfelt impressions and reflections, discover your reading habits, and search your collection seamlessly in both Light and Dark mode.
+A minimal, aesthetically crafted static bookshelf and reading journal designed for book lovers. All your books, personal thoughts, and reviews live directly in your Git repository. Add or update books locally, push to GitHub, and your website updates automatically.
+
+Live Site: **[https://deepakvasuchoudhary.github.io/Books/](https://deepakvasuchoudhary.github.io/Books/)**
+
+---
+
+## ⚡ How to Add or Update Books
+
+Your entire library is stored in **[`src/data/books.js`](./src/data/books.js)**. You can manage books in two simple ways:
+
+### Option 1: Terminal Helper (Recommended)
+Run the interactive helper in your terminal:
+```bash
+npm run add-book
+```
+This CLI prompt asks for the book's title and author, automatically fetches cover images and publication info from Open Library, asks for your thoughts and quotes, and appends the new entry directly to `src/data/books.js`!
+
+### Option 2: Edit `src/data/books.js` Directly
+Open `src/data/books.js` in your text editor (VS Code, Cursor, etc.) and add or update an entry:
+
+```javascript
+{
+  id: "your-book-id",
+  title: "Book Title",
+  author: "Author Name",
+  publishedYear: 2024,
+  coverUrl: "https://covers.openlibrary.org/b/id/10543781-L.jpg", // or leave empty for auto fallback
+  rating: 5, // 1 to 5
+  status: "read", // "read" | "reading" | "want_to_read"
+  dateRead: "2024-09-01",
+  dateStarted: "2024-08-20",
+  pages: 350,
+  genres: ["Sci-Fi", "Philosophy"],
+  favorite: true, // true or false
+  description: `Brief book synopsis...`,
+  myThoughts: `Write your authentic impressions, reflections, and takeaways here...`,
+  favoriteQuote: `A memorable line from the book...`,
+},
+```
+
+---
+
+## 🚀 Publish Changes to GitHub Pages
+
+Whenever you add or update books, commit and push your changes:
+
+```bash
+git add .
+git commit -m "add: [Book Title]"
+git push origin main
+```
+
+The GitHub Actions workflow will automatically build the static website and deploy the updates to GitHub Pages!
+
+You can also deploy manually at any time by running:
+```bash
+npm run deploy
+```
+
+---
+
+## 🛠️ Local Development
+
+To preview your library locally before pushing:
+
+```bash
+# Start local development server
+npm run dev
+
+# Run build verification
+npm run build
+```
 
 ---
 
 ## ✨ Features
 
-- **Personal Reflections & Thoughts**: Dedicated literary journal space to write what you thought, felt, and learned when reading each book.
-- **Book Metadata & Covers**:
-  - High-resolution covers with realistic 3D book spine depth and ambient shadow.
-  - Typographic, color-themed fallback covers when no image is available.
-  - Writer / Author name, year of publication, page count, and genres/tags.
-  - Favorite quote highlights and book synopses.
-- **Instant Search & Deep Filtering**:
-  - Instant live search matching title, author, thoughts, quotes, and genres.
-  - Status filters: *All*, *Finished Reading*, *Currently Reading*, *Want to Read*, *Favorites*.
-  - Dynamic genre pill filters (automatically generated from your collection).
-  - Star rating filter (5 stars, 4+ stars, 3+ stars).
-  - Sorting: *Recently Read*, *Highest Rated*, *Title (A–Z)*, *Author (A–Z)*, *Publication Year (Newest/Oldest)*.
-- **Dual View Modes**:
-  - **Cover Showcase (Grid)**: Visual cover grid with ratings, status badges, and quick thought excerpts.
-  - **Reading Journal (Editorial Stream)**: Longform reading view focusing on your reflections, notes, and favorite quotes.
-- **Open Library Instant Auto-Fill**:
-  - Search any book title, author, or ISBN to auto-fill cover image, author, year published, pages, and genres in one click.
-  - Option to upload custom cover images from your computer or paste any image URL.
-- **Reading Stats & Annual Challenge**:
-  - Live counts: Books Read, Total Pages, Average Rating, and Top Genre.
-  - Annual Reading Goal tracker with progress bar and celebratory confetti!
-- **Theme Support**:
-  - Handcrafted **Warm Alabaster (Light Mode)** and **Obsidian Charcoal (Dark Mode)** with seamless toggle and system preference sync.
-- **Data Privacy & Portability**:
-  - Fully local: data persists automatically in your browser's `localStorage`.
-  - Single-click JSON backup export and import.
-  - Ability to export individual book notes to Markdown for Obsidian or Notion.
-  - Curated initial library with thoughtful sample reviews.
-
----
-
-## 🚀 Getting Started
-
-### Development Server
-```bash
-npm install
-npm run dev
-```
-Open [http://localhost:5173](http://localhost:5173) in your browser.
-
-### Production Build
-```bash
-npm run build
-npm run preview
-```
-
----
-
-## 🛠️ Built With
-
-- **React 19**
-- **Vite**
-- **Tailwind CSS v4**
-- **Lucide Icons**
-- **Canvas Confetti**
-- **Open Library API**
+- **Personal Thoughts & Reflections**: Featured prominently in both Grid and Journal views.
+- **Instant Search & Deep Filtering**: Search across titles, authors, thoughts, quotes, and genres. Filter by reading status, star rating, and dynamically detected genres.
+- **Dual View Modes**: Cover Showcase (visual grid) and Reading Journal (editorial reading stream).
+- **Minimalist Light & Dark Mode**: Warm paper aesthetic in light mode, deep obsidian charcoal in dark mode.
+- **100% Static & Git-Backed**: Your notes and library are version-controlled in Git forever—no databases, no external lock-in.

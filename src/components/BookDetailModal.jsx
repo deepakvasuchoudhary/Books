@@ -5,8 +5,6 @@ import {
   X,
   Heart,
   Calendar,
-  Edit3,
-  Trash2,
   Quote,
   MessageSquare,
   Share2,
@@ -19,11 +17,6 @@ export function BookDetailModal({
   book,
   isOpen,
   onClose,
-  onEdit,
-  onDelete,
-  onToggleFavorite,
-  onUpdateStatus,
-  onUpdateRating
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -51,9 +44,9 @@ export function BookDetailModal({
   };
 
   const statusMap = {
-    read: { label: 'Read', color: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300' },
-    reading: { label: 'Currently Reading', color: 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300' },
-    want_to_read: { label: 'Want to Read', color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/70 dark:text-indigo-300' },
+    read: { label: 'Finished Reading', color: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800' },
+    reading: { label: 'Currently Reading', color: 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800' },
+    want_to_read: { label: 'Want to Read', color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/70 dark:text-indigo-300 border-indigo-300 dark:border-indigo-800' },
   };
 
   return (
@@ -66,7 +59,7 @@ export function BookDetailModal({
         {/* Top Sticky Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-stone-200/80 dark:border-stone-800/80 bg-white/70 dark:bg-[#151922]/70 backdrop-blur-md sticky top-0 z-20">
           <div className="flex items-center gap-2">
-            <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${statusMap[book.status]?.color}`}>
+            <span className={`text-xs px-2.5 py-1 rounded-full font-medium border ${statusMap[book.status]?.color}`}>
               {statusMap[book.status]?.label}
             </span>
             {book.favorite && (
@@ -79,47 +72,29 @@ export function BookDetailModal({
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => onToggleFavorite(book.id)}
-              className={`p-2 rounded-full transition-colors ${
-                book.favorite
-                  ? 'text-rose-500 bg-rose-50 dark:bg-rose-950/50'
-                  : 'text-stone-400 hover:text-rose-500 hover:bg-stone-100 dark:hover:bg-stone-800'
-              }`}
-              title={book.favorite ? 'Favorited' : 'Add to favorites'}
-            >
-              <Heart size={18} className={book.favorite ? 'fill-rose-500' : ''} />
-            </button>
-
-            <button
               onClick={copyMarkdown}
-              className="p-2 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors relative"
+              className="px-3 py-1.5 text-xs text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors flex items-center gap-1.5 border border-stone-200 dark:border-stone-800"
               title="Copy notes as Markdown"
             >
-              {copied ? <Check size={18} className="text-emerald-600" /> : <Share2 size={18} />}
-            </button>
-
-            <button
-              onClick={() => onEdit(book)}
-              className="p-2 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
-              title="Edit book"
-            >
-              <Edit3 size={18} />
-            </button>
-
-            <button
-              onClick={() => onDelete(book.id)}
-              className="p-2 text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
-              title="Delete book"
-            >
-              <Trash2 size={18} />
+              {copied ? (
+                <>
+                  <Check size={14} className="text-emerald-600" />
+                  <span className="text-emerald-600 font-medium">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Share2 size={14} />
+                  <span>Copy Markdown</span>
+                </>
+              )}
             </button>
 
             <div className="w-[1px] h-4 bg-stone-200 dark:bg-stone-800 mx-1" />
 
             <button
               onClick={onClose}
-              className="p-2 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
-              title="Close modal"
+              className="p-1.5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+              title="Close modal (ESC)"
             >
               <X size={20} />
             </button>
@@ -164,12 +139,7 @@ export function BookDetailModal({
                 <div>
                   <span className="text-stone-400 dark:text-stone-500 uppercase tracking-wider block text-[10px] font-mono">Rating</span>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <StarRating
-                      rating={book.rating}
-                      size={14}
-                      interactive={true}
-                      onChange={(newRating) => onUpdateRating(book.id, newRating)}
-                    />
+                    <StarRating rating={book.rating} size={14} interactive={false} />
                     <span className="font-mono font-semibold text-stone-700 dark:text-stone-300 text-xs">
                       {book.rating > 0 ? `${book.rating}.0` : 'Unrated'}
                     </span>
@@ -177,40 +147,20 @@ export function BookDetailModal({
                 </div>
               </div>
 
-              {/* Status Switcher & Reading Dates */}
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center gap-2 text-xs">
-                  <span className="text-stone-400 dark:text-stone-500">Status:</span>
-                  {(['read', 'reading', 'want_to_read']).map((st) => (
-                    <button
-                      key={st}
-                      type="button"
-                      onClick={() => onUpdateStatus(book.id, st)}
-                      className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                        book.status === st
-                          ? 'bg-amber-700 text-white shadow-sm'
-                          : 'bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300'
-                      }`}
-                    >
-                      {statusMap[st]?.label}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="flex flex-wrap gap-4 text-xs text-stone-500 dark:text-stone-400 pt-1">
-                  {book.dateStarted && (
-                    <div className="flex items-center gap-1.5">
-                      <Clock size={13} className="text-stone-400" />
-                      <span>Started: <strong>{book.dateStarted}</strong></span>
-                    </div>
-                  )}
-                  {book.dateRead && (
-                    <div className="flex items-center gap-1.5">
-                      <Calendar size={13} className="text-stone-400" />
-                      <span>Finished: <strong>{book.dateRead}</strong></span>
-                    </div>
-                  )}
-                </div>
+              {/* Reading Dates */}
+              <div className="flex flex-wrap gap-4 text-xs text-stone-500 dark:text-stone-400 pt-1">
+                {book.dateStarted && (
+                  <div className="flex items-center gap-1.5">
+                    <Clock size={13} className="text-stone-400" />
+                    <span>Started: <strong className="text-stone-700 dark:text-stone-300">{book.dateStarted}</strong></span>
+                  </div>
+                )}
+                {book.dateRead && (
+                  <div className="flex items-center gap-1.5">
+                    <Calendar size={13} className="text-stone-400" />
+                    <span>Finished: <strong className="text-stone-700 dark:text-stone-300">{book.dateRead}</strong></span>
+                  </div>
+                )}
               </div>
 
               {/* Genres */}
@@ -230,21 +180,11 @@ export function BookDetailModal({
             </div>
           </div>
 
-          {/* MY THOUGHTS & REFLECTIONS (Primary user feature) */}
+          {/* MY THOUGHTS & REFLECTIONS */}
           <div className="p-6 rounded-2xl bg-amber-500/5 dark:bg-amber-400/5 border border-amber-500/20 dark:border-amber-400/15">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-medium text-sm tracking-wide">
-                <MessageSquare size={16} />
-                <span>My Thoughts & Reflections</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => onEdit(book)}
-                className="text-xs text-amber-700 dark:text-amber-400 hover:underline flex items-center gap-1"
-              >
-                <Edit3 size={12} />
-                <span>Edit note</span>
-              </button>
+            <div className="flex items-center gap-2 mb-3 text-amber-800 dark:text-amber-300 font-medium text-sm tracking-wide">
+              <MessageSquare size={16} />
+              <span>My Thoughts & Reflections</span>
             </div>
 
             {book.myThoughts ? (
@@ -253,13 +193,7 @@ export function BookDetailModal({
               </p>
             ) : (
               <div className="text-center py-4 text-stone-400 text-sm">
-                <p>You haven't added any thoughts yet for this book.</p>
-                <button
-                  onClick={() => onEdit(book)}
-                  className="mt-2 text-xs font-medium text-amber-600 dark:text-amber-400 hover:underline"
-                >
-                  + Add what you felt or learned
-                </button>
+                <p>No personal reflections added for this book.</p>
               </div>
             )}
           </div>
@@ -294,11 +228,10 @@ export function BookDetailModal({
         <div className="px-6 py-3.5 bg-stone-50 dark:bg-[#161a24] border-t border-stone-200/80 dark:border-stone-800/80 flex items-center justify-between text-xs text-stone-500">
           <span>Press <kbd className="px-1.5 py-0.5 bg-stone-200 dark:bg-stone-800 rounded font-mono text-[10px]">ESC</kbd> to close</span>
           <button
-            onClick={() => onEdit(book)}
-            className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white font-medium transition-colors flex items-center gap-1.5"
+            onClick={onClose}
+            className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white font-medium transition-colors"
           >
-            <Edit3 size={14} />
-            <span>Edit Entry</span>
+            Close
           </button>
         </div>
       </div>

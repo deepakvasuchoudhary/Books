@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { INITIAL_BOOKS } from './data/initialBooks';
+import { BOOKS } from './data/books';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { Navbar } from './components/Navbar';
 import { StatsBar } from './components/StatsBar';
@@ -7,13 +7,13 @@ import { SearchAndFilter } from './components/SearchAndFilter';
 import { BookCard } from './components/BookCard';
 import { BookJournalRow } from './components/BookJournalRow';
 import { BookDetailModal } from './components/BookDetailModal';
-import { BookFormModal } from './components/BookFormModal';
-import { ConfirmModal } from './components/ConfirmModal';
-import { BookOpen, Plus, FilterX, BookMarked, Check } from 'lucide-react';
+import { BookOpen, FilterX, BookMarked } from 'lucide-react';
 
 export default function App() {
-  // Local storage state
-  const [books, setBooks] = useLocalStorage('folio_books_v1', INITIAL_BOOKS);
+  // Static books collection from src/data/books.js
+  const books = BOOKS;
+
+  // Reading Goal & Preferences
   const [readingGoal, setReadingGoal] = useLocalStorage('folio_reading_goal_v1', 20);
   const [viewMode, setViewMode] = useLocalStorage('folio_view_mode_v1', 'grid');
   const [showStats, setShowStats] = useLocalStorage('folio_show_stats_v1', true);
@@ -45,18 +45,8 @@ export default function App() {
   const [ratingFilter, setRatingFilter] = useState('all');
   const [sortBy, setSortBy] = useState('recent_read');
 
-  // Modals & Drawers
+  // Detail Modal
   const [detailBook, setDetailBook] = useState(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingBook, setEditingBook] = useState(null);
-  const [confirmState, setConfirmState] = useState({ isOpen: false, title: '', message: '', onConfirm: () => {} });
-
-  // Notification Toast
-  const [toastMessage, setToastMessage] = useState(null);
-  const showToast = (msg) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 2500);
-  };
 
   // Available unique genres
   const availableGenres = useMemo(() => {
@@ -141,138 +131,20 @@ export default function App() {
       });
   }, [books, statusFilter, selectedGenre, ratingFilter, searchQuery, sortBy]);
 
-  // Book Actions
-  const handleSaveBook = (bookData) => {
-    if (editingBook) {
-      setBooks((prev) => prev.map((b) => (b.id === bookData.id ? bookData : b)));
-      if (detailBook && detailBook.id === bookData.id) {
-        setDetailBook(bookData);
-      }
-      showToast('Book updated successfully');
-    } else {
-      setBooks((prev) => [bookData, ...prev]);
-      showToast('New book added to library');
-    }
-  };
-
-  const handleToggleFavorite = (id) => {
-    setBooks((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, favorite: !b.favorite } : b))
-    );
-    if (detailBook && detailBook.id === id) {
-      setDetailBook((prev) => ({ ...prev, favorite: !prev.favorite }));
-    }
-  };
-
-  const handleUpdateStatus = (id, newStatus) => {
-    setBooks((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: newStatus } : b))
-    );
-    if (detailBook && detailBook.id === id) {
-      setDetailBook((prev) => ({ ...prev, status: newStatus }));
-    }
-    showToast(`Status updated to ${newStatus}`);
-  };
-
-  const handleUpdateRating = (id, newRating) => {
-    setBooks((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, rating: newRating } : b))
-    );
-    if (detailBook && detailBook.id === id) {
-      setDetailBook((prev) => ({ ...prev, rating: newRating }));
-    }
-  };
-
-  const handleDeleteBook = (id) => {
-    setConfirmState({
-      isOpen: true,
-      title: 'Remove Book from Library?',
-      message: 'This will permanently remove this book and your personal thoughts/reflections from your library.',
-      confirmText: 'Delete Book',
-      onConfirm: () => {
-        setBooks((prev) => prev.filter((b) => b.id !== id));
-        if (detailBook?.id === id) setDetailBook(null);
-        setConfirmState({ isOpen: false });
-        showToast('Book removed from library');
-      },
-    });
-  };
-
-  const handleResetData = () => {
-    setConfirmState({
-      isOpen: true,
-      title: 'Reset to Curated Sample Library?',
-      message: 'This will replace your current books with the curated sample library.',
-      confirmText: 'Reset Library',
-      onConfirm: () => {
-        setBooks(INITIAL_BOOKS);
-        setConfirmState({ isOpen: false });
-        showToast('Library reset to curated collection');
-      },
-    });
-  };
-
-  // Export JSON
-  const handleExportData = () => {
-    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(books, null, 2));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `folio-reading-journal-${new Date().toISOString().split('T')[0]}.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-    showToast('Library exported successfully');
-  };
-
-  // Import JSON
-  const handleImportData = (file) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const imported = JSON.parse(e.target.result);
-        if (Array.isArray(imported)) {
-          setBooks(imported);
-          showToast(`Imported ${imported.length} books successfully`);
-        } else {
-          alert('Invalid JSON format: expected an array of books.');
-        }
-      } catch (err) {
-        console.error('Import error:', err);
-        alert('Could not parse JSON file. Please check the file format.');
-      }
-    };
-    reader.readAsText(file);
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-[#faf8f5] dark:bg-[#0c0e12] text-stone-900 dark:text-stone-100 transition-colors duration-200">
-      {/* Toast */}
-      {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-2xl bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 shadow-xl text-xs font-medium animate-in fade-in slide-in-from-bottom-3 duration-200">
-          <Check size={16} className="text-emerald-400 dark:text-emerald-600" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
-
       {/* Navigation Bar */}
       <Navbar
         theme={theme}
         onToggleTheme={toggleTheme}
         showStats={showStats}
         onToggleStats={() => setShowStats(!showStats)}
-        onAddBook={() => {
-          setEditingBook(null);
-          setIsFormOpen(true);
-        }}
-        onExportData={handleExportData}
-        onImportData={handleImportData}
-        onResetData={handleResetData}
         totalCount={books.length}
       />
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
-        {/* Editorial Literary Quote Header */}
+        {/* Editorial Header */}
         <section className="relative py-4 text-left border-b border-stone-200/80 dark:border-stone-800/80">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
@@ -328,39 +200,24 @@ export default function App() {
               <BookMarked size={28} />
             </div>
             <h3 className="font-serif font-bold text-xl text-stone-900 dark:text-stone-100">
-              No books found
+              No matching books found
             </h3>
             <p className="text-sm text-stone-500 dark:text-stone-400 mt-1 max-w-md mx-auto">
-              {searchQuery || statusFilter !== 'all' || selectedGenre !== 'all' || ratingFilter !== 'all'
-                ? 'Try adjusting your search keywords or clearing some filters.'
-                : 'Your library is empty. Start by logging the first book you have read!'}
+              Try adjusting your search keywords or clearing active filters.
             </p>
-            <div className="mt-4 flex justify-center gap-3">
-              {(searchQuery || statusFilter !== 'all' || selectedGenre !== 'all' || ratingFilter !== 'all') ? (
-                <button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setStatusFilter('all');
-                    setSelectedGenre('all');
-                    setRatingFilter('all');
-                  }}
-                  className="px-4 py-2 text-xs font-semibold rounded-xl bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 transition-colors flex items-center gap-1.5"
-                >
-                  <FilterX size={14} />
-                  <span>Reset All Filters</span>
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    setEditingBook(null);
-                    setIsFormOpen(true);
-                  }}
-                  className="px-4 py-2 text-xs font-semibold rounded-xl bg-amber-700 hover:bg-amber-800 text-white transition-colors flex items-center gap-1.5"
-                >
-                  <Plus size={14} />
-                  <span>Add First Book</span>
-                </button>
-              )}
+            <div className="mt-4 flex justify-center">
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setStatusFilter('all');
+                  setSelectedGenre('all');
+                  setRatingFilter('all');
+                }}
+                className="px-4 py-2 text-xs font-semibold rounded-xl bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 transition-colors flex items-center gap-1.5"
+              >
+                <FilterX size={14} />
+                <span>Reset All Filters</span>
+              </button>
             </div>
           </div>
         ) : viewMode === 'grid' ? (
@@ -371,7 +228,6 @@ export default function App() {
                 key={book.id}
                 book={book}
                 onSelect={(b) => setDetailBook(b)}
-                onToggleFavorite={handleToggleFavorite}
               />
             ))}
           </div>
@@ -383,7 +239,6 @@ export default function App() {
                 key={book.id}
                 book={book}
                 onSelect={(b) => setDetailBook(b)}
-                onToggleFavorite={handleToggleFavorite}
               />
             ))}
           </div>
@@ -396,10 +251,10 @@ export default function App() {
           <div className="flex items-center gap-2">
             <BookOpen size={16} className="text-amber-700 dark:text-amber-400" />
             <span className="font-serif font-bold text-stone-800 dark:text-stone-200">Folio</span>
-            <span>— Your sanctuary for books, memories & reflections</span>
+            <span>— Personal reading journal & shelf</span>
           </div>
           <div className="font-mono text-[11px] text-stone-400">
-            {books.length} Books in Collection • Stored locally in your browser
+            {books.length} Books in Collection • Updated via Git
           </div>
         </div>
       </footer>
@@ -409,35 +264,6 @@ export default function App() {
         book={detailBook}
         isOpen={!!detailBook}
         onClose={() => setDetailBook(null)}
-        onEdit={(b) => {
-          setEditingBook(b);
-          setIsFormOpen(true);
-        }}
-        onDelete={(id) => handleDeleteBook(id)}
-        onToggleFavorite={handleToggleFavorite}
-        onUpdateStatus={handleUpdateStatus}
-        onUpdateRating={handleUpdateRating}
-      />
-
-      {/* Add / Edit Form Modal */}
-      <BookFormModal
-        isOpen={isFormOpen}
-        onClose={() => {
-          setIsFormOpen(false);
-          setEditingBook(null);
-        }}
-        onSave={handleSaveBook}
-        initialData={editingBook}
-      />
-
-      {/* Confirmation Modal */}
-      <ConfirmModal
-        isOpen={confirmState.isOpen}
-        title={confirmState.title}
-        message={confirmState.message}
-        confirmText={confirmState.confirmText}
-        onConfirm={confirmState.onConfirm}
-        onCancel={() => setConfirmState({ isOpen: false })}
       />
     </div>
   );

@@ -3,8 +3,7 @@ import { BookCover } from './BookCover';
 import { StarRating } from './StarRating';
 import { Heart, MessageSquare } from 'lucide-react';
 
-
-export function BookCard({ book, onSelect, onToggleFavorite }) {
+export function BookCard({ book, onSelect }) {
   const statusLabels = {
     read: { text: 'Read', bg: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' },
     reading: { text: 'Reading', bg: 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300 border-amber-200 dark:border-amber-800' },
@@ -30,22 +29,15 @@ export function BookCard({ book, onSelect, onToggleFavorite }) {
           />
         </div>
 
-        {/* Favorite Button */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleFavorite(book.id);
-          }}
-          className={`absolute top-0 right-0 p-2 rounded-full transition-all duration-200 backdrop-blur-sm ${
-            book.favorite
-              ? 'text-rose-500 bg-rose-50/90 dark:bg-rose-950/70'
-              : 'text-stone-400 hover:text-rose-500 bg-stone-100/80 dark:bg-stone-800/80 opacity-0 group-hover:opacity-100'
-          }`}
-          title={book.favorite ? 'Favorited' : 'Add to favorites'}
-        >
-          <Heart size={16} className={book.favorite ? 'fill-rose-500' : ''} />
-        </button>
+        {/* Favorite Badge */}
+        {book.favorite && (
+          <div
+            className="absolute top-0 right-0 p-2 rounded-full text-rose-500 bg-rose-50/90 dark:bg-rose-950/70 backdrop-blur-sm"
+            title="Favorite"
+          >
+            <Heart size={15} className="fill-rose-500" />
+          </div>
+        )}
       </div>
 
       {/* Book Metadata */}
@@ -84,7 +76,7 @@ export function BookCard({ book, onSelect, onToggleFavorite }) {
           </div>
         </div>
 
-        {/* My Thoughts Excerpt / Highlight */}
+        {/* My Thoughts Excerpt */}
         {book.myThoughts && (
           <div className="mt-3.5 pt-3 border-t border-stone-100 dark:border-stone-800/80">
             <div className="flex items-start gap-1.5 text-stone-600 dark:text-stone-300 text-xs">

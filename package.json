@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build && cp dist/index.html dist/404.html && rm -rf docs && cp -r dist docs",
     "deploy": "npm run build && gh-pages -d dist -b gh-pages",
-    "lint": "oxlint",
+    "add-book": "node scripts/add-book.js",
+    "lint": "oxlint src",
     "preview": "vite preview"
   },
   "dependencies": {
