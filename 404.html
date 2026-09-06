@@ -10,6 +10,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('libris_theme') || localStorage.getItem('folio_theme');
+          var isDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script>
       // Fallback: If served directly from repository root on GitHub Pages:
       if (location.hostname.endsWith('github.io') && !document.querySelector('script[src*="assets/index-"]')) {
         var link = document.createElement('link');
@@ -24,8 +37,8 @@
         document.head.appendChild(s);
       }
     </script>
-    <script type="module" crossorigin src="/Books/assets/index-Cb3sHxwM.js"></script>
-    <link rel="stylesheet" crossorigin href="/Books/assets/index-CyzQOHfT.css">
+    <script type="module" crossorigin src="/Books/assets/index-C1EUHGWR.js"></script>
+    <link rel="stylesheet" crossorigin href="/Books/assets/index-CBuis_Lp.css">
   </head>
   <body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#090a0f] dark:text-zinc-100 transition-colors duration-200 antialiased selection:bg-indigo-500/20 selection:text-indigo-900 dark:selection:text-indigo-200">
     <div id="root"></div>

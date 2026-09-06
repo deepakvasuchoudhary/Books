@@ -8,10 +8,14 @@ import {
   Table as TableIcon,
   ArrowUpDown,
   FilterX,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 export function TopHeader({
   onOpenMobileMenu,
+  theme,
+  onToggleTheme,
   searchQuery,
   onSearchChange,
   searchInputRef,
@@ -140,6 +144,22 @@ export function TopHeader({
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500 pointer-events-none"
             />
           </div>
+
+          {/* Quick Theme Toggle */}
+          {onToggleTheme && (
+            <button
+              onClick={onToggleTheme}
+              className="p-2 rounded-xl bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200/70 dark:hover:bg-white/[0.1] text-slate-700 dark:text-zinc-300 border border-slate-200/70 dark:border-white/[0.08] transition-colors cursor-pointer"
+              title={`Switch to ${theme === "dark" ? "Light" : "Dark"} Mode`}
+              aria-label="Toggle color theme"
+            >
+              {theme === "dark" ? (
+                <Sun size={15} className="text-amber-400" />
+              ) : (
+                <Moon size={15} className="text-indigo-600" />
+              )}
+            </button>
+          )}
         </div>
       </div>
 

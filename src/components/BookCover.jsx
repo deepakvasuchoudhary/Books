@@ -7,7 +7,6 @@ export function BookCover({
   author,
   gradient = 'from-indigo-900 via-slate-900 to-zinc-950',
   size = 'md',
-  showEdge = true,
   className = '',
 }) {
   const [hasError, setHasError] = useState(false);
@@ -25,10 +24,10 @@ export function BookCover({
 
   return (
     <div
-      className={`relative select-none book-shadow-modern book-spine-effect ${showEdge ? 'book-page-edge' : ''} transition-all duration-300 ${sizeClasses[size] || sizeClasses.md} ${className}`}
+      className={`relative select-none book-shadow-modern transition-all duration-300 ${sizeClasses[size] || sizeClasses.md} ${className}`}
     >
       {/* Container with rounded corner clip */}
-      <div className="w-full h-full rounded-[inherit] overflow-hidden relative bg-slate-100 dark:bg-zinc-900 border border-black/5 dark:border-white/10">
+      <div className="w-full h-full rounded-[inherit] overflow-hidden relative bg-slate-100 dark:bg-zinc-900 border border-slate-200/60 dark:border-white/10">
         {!showFallback ? (
           <>
             {isLoading && (

@@ -10,6 +10,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('libris_theme') || localStorage.getItem('folio_theme');
+          var isDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script>
       // Fallback: If served directly from repository root on GitHub Pages:
       if (location.hostname.endsWith('github.io') && !document.querySelector('script[src*="assets/index-"]')) {
         var link = document.createElement('link');

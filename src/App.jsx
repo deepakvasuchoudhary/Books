@@ -265,6 +265,8 @@ export default function App() {
         {/* Modern Sticky Top Bar */}
         <TopHeader
           onOpenMobileMenu={() => setIsMobileSidebarOpen(true)}
+          theme={theme}
+          onToggleTheme={toggleTheme}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           searchInputRef={searchInputRef}
