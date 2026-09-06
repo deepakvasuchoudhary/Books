@@ -18,6 +18,12 @@ export function BookCardBento({ book, onSelectBook }) {
             ) : (
               <span className="text-[10px] font-mono text-slate-400">Archive</span>
             )}
+            {book.status === "reading" && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] font-semibold border border-emerald-500/20">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Reading</span>
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-1.5">
@@ -44,11 +50,11 @@ export function BookCardBento({ book, onSelectBook }) {
             <h3 className="font-bold text-sm text-slate-900 dark:text-white line-clamp-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
               {book.title}
             </h3>
-            {book.publishedYear && (
-              <span className="text-[11px] font-mono text-slate-400 dark:text-zinc-500 shrink-0">
-                {book.publishedYear}
-              </span>
-            )}
+            <div className="flex items-center gap-1 text-[11px] font-mono text-slate-400 dark:text-zinc-500 shrink-0">
+              {book.pages && <span>{book.pages}p</span>}
+              {book.pages && book.publishedYear && <span>·</span>}
+              {book.publishedYear && <span>{book.publishedYear}</span>}
+            </div>
           </div>
 
           <p className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-1 font-medium">

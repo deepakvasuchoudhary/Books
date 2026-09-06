@@ -38,15 +38,22 @@ export function BookTableCatalog({ books, onSelectBook }) {
                 />
               </td>
               <td className="py-3 px-4">
-                <div className="font-semibold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
-                  {book.title}
+                <div className="flex items-center gap-2">
+                  <div className="font-semibold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
+                    {book.title}
+                  </div>
+                  {book.status === "reading" && (
+                    <span className="shrink-0 px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-[9px] font-semibold border border-emerald-500/20">
+                      Reading
+                    </span>
+                  )}
                 </div>
               </td>
               <td className="py-3 px-4 text-slate-600 dark:text-zinc-400 font-medium">
                 {book.author}
               </td>
               <td className="py-3 px-4 hidden sm:table-cell font-mono text-slate-400 dark:text-zinc-500">
-                {book.publishedYear || "—"}
+                {book.publishedYear || "—"}{book.pages ? ` · ${book.pages}p` : ""}
               </td>
               <td className="py-3 px-4 hidden md:table-cell">
                 {book.genres?.[0] ? (

@@ -10,6 +10,8 @@ import {
   Quote,
   CheckCircle2,
   Sparkles,
+  Clock,
+  Bookmark,
 } from "lucide-react";
 
 export function BookReaderDrawer({
@@ -103,10 +105,28 @@ export function BookReaderDrawer({
 
               <div className="flex-1 text-center sm:text-left space-y-3 min-w-0">
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-medium border border-emerald-500/20">
-                    <CheckCircle2 size={12} />
-                    <span>Completed</span>
-                  </span>
+                  {book.status === "reading" ? (
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-medium border border-emerald-500/20">
+                      <Clock size={12} className="animate-pulse text-emerald-500" />
+                      <span>Currently Reading</span>
+                    </span>
+                  ) : book.status === "want_to_read" ? (
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-medium border border-amber-500/20">
+                      <Bookmark size={12} />
+                      <span>Reading Queue</span>
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-medium border border-blue-500/20">
+                      <CheckCircle2 size={12} />
+                      <span>Completed Archive</span>
+                    </span>
+                  )}
+
+                  {book.pages && (
+                    <span className="px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-mono font-medium border border-indigo-200/40 dark:border-indigo-800/40">
+                      {book.pages} pages
+                    </span>
+                  )}
 
                   {book.publishedYear && (
                     <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-zinc-400 text-xs font-mono font-medium">
@@ -181,12 +201,12 @@ export function BookReaderDrawer({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 pt-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
               <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/[0.05]">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500 block">
                   Catalog ID
                 </span>
-                <span className="text-xs font-mono text-slate-700 dark:text-zinc-300 font-medium">
+                <span className="text-xs font-mono text-slate-700 dark:text-zinc-300 font-medium truncate block">
                   {book.id}
                 </span>
               </div>
@@ -195,9 +215,32 @@ export function BookReaderDrawer({
                 <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500 block">
                   Status
                 </span>
-                <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-0.5">
-                  <CheckCircle2 size={12} />
-                  <span>Archived in Library</span>
+                <span className="text-xs font-medium flex items-center gap-1 mt-0.5">
+                  {book.status === "reading" ? (
+                    <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                      <Clock size={12} className="animate-pulse" />
+                      <span>Reading</span>
+                    </span>
+                  ) : book.status === "want_to_read" ? (
+                    <span className="text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                      <Bookmark size={12} />
+                      <span>In Queue</span>
+                    </span>
+                  ) : (
+                    <span className="text-blue-600 dark:text-blue-400 flex items-center gap-1">
+                      <CheckCircle2 size={12} />
+                      <span>Completed</span>
+                    </span>
+                  )}
+                </span>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/[0.05] col-span-2 sm:col-span-1">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500 block">
+                  Page Length
+                </span>
+                <span className="text-xs font-mono text-slate-700 dark:text-zinc-300 font-medium mt-0.5 block">
+                  {book.pages ? `${book.pages} pages` : "Unspecified"}
                 </span>
               </div>
             </div>
