@@ -50,7 +50,7 @@ export function RandomBookModal({
         <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-white/[0.06]">
           <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-mono text-xs uppercase tracking-wider font-semibold">
             <Sparkles size={15} />
-            <span>Curator's Random Selection</span>
+            <span>Little Nalanda Discovery</span>
           </div>
           <button
             onClick={onClose}

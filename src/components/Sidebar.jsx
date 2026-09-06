@@ -5,7 +5,6 @@ import {
   CheckCircle2,
   Bookmark,
   Sparkles,
-  Heart,
   Dices,
   Sun,
   Moon,
@@ -66,13 +65,6 @@ export function Sidebar({
       count: counts.five_stars,
       color: "text-amber-400",
     },
-    {
-      id: "favorites",
-      label: "Curator's Favorites",
-      icon: Heart,
-      count: counts.favorites,
-      color: "text-rose-500",
-    },
   ];
 
   return (
@@ -100,8 +92,8 @@ export function Sidebar({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-sm tracking-tight text-slate-900 dark:text-white uppercase">
-                  Libris
+                <span className="font-bold text-sm tracking-tight text-slate-900 dark:text-white">
+                  Little Nalanda
                 </span>
                 <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -109,7 +101,7 @@ export function Sidebar({
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-medium">
-                Deepak's Reading Vault
+                Deepak's Personal Library
               </p>
             </div>
           </div>
@@ -228,44 +220,6 @@ export function Sidebar({
                   </button>
                 );
               })}
-            </div>
-          </div>
-
-          {/* Reading Milestone Bento Display (Pure Read-Only, No Edit Buttons) */}
-          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-[#131622] dark:to-[#0f111a] border border-slate-200/70 dark:border-white/[0.06] shadow-xs space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-semibold">
-                Annual Target
-              </span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold">
-                100%
-              </span>
-            </div>
-
-            <div className="space-y-1.5">
-              <div className="flex items-baseline justify-between">
-                <span className="text-xl font-bold text-slate-900 dark:text-white font-mono">
-                  {counts.read} <span className="text-xs font-normal text-slate-400 dark:text-zinc-500">/ 20</span>
-                </span>
-                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                  Goal Exceeded 🎉
-                </span>
-              </div>
-
-              {/* Progress bar */}
-              <div className="h-1.5 w-full bg-slate-200 dark:bg-zinc-800 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-indigo-500 to-emerald-400 rounded-full transition-all duration-500"
-                  style={{ width: "100%" }}
-                />
-              </div>
-
-              <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-zinc-400 pt-0.5">
-                <span>Total Explored</span>
-                <span className="font-mono font-medium text-slate-700 dark:text-zinc-300">
-                  81 Volumes
-                </span>
-              </div>
             </div>
           </div>
         </div>

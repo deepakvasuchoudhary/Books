@@ -74,7 +74,7 @@ export function BookCover({
 
             {/* Bottom identifier */}
             <div className="z-10 flex items-center justify-between text-[9px] text-white/50 font-mono pt-2 border-t border-white/10">
-              <span>LIBRIS</span>
+              <span>LITTLE NALANDA</span>
               <span>●</span>
             </div>
           </div>

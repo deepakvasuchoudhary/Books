@@ -1,4 +1,4 @@
-# 📚 Libris — Personal Reading Vault & Library
+# 📚 Little Nalanda — Personal Reading Vault & Library
 
 A modern, high-performance digital library and reading archive inspired by Linear and Apple Books aesthetics. Designed as a pure reading and showcase experience for book lovers—curated, version-controlled in Git, and deployed seamlessly to GitHub Pages.
 

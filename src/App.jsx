@@ -120,7 +120,6 @@ export default function App() {
       if (activeShelf === "read" && book.status !== "read") return false;
       if (activeShelf === "want_to_read" && book.status !== "want_to_read") return false;
       if (activeShelf === "five_stars" && book.rating !== 5) return false;
-      if (activeShelf === "favorites" && !book.favorite) return false;
 
       // Genre Filter
       if (selectedGenre !== "all") {
@@ -187,8 +186,6 @@ export default function App() {
         return "Reading Queue";
       case "five_stars":
         return "5-Star Hall of Fame";
-      case "favorites":
-        return "Curator's Favorites";
       default:
         return "All Library Volumes";
     }
@@ -358,9 +355,9 @@ export default function App() {
         {/* Modern Minimalist Footer */}
         <footer className="px-6 py-5 border-t border-slate-200/80 dark:border-white/[0.08] text-xs text-slate-500 dark:text-zinc-500 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 font-medium">
-            <span className="font-bold text-slate-800 dark:text-zinc-300">LIBRIS</span>
+            <span className="font-bold text-slate-800 dark:text-zinc-300 tracking-wide">LITTLE NALANDA</span>
             <span>•</span>
-            <span>Deepak Choudhary's Reading Vault</span>
+            <span>Deepak Choudhary's Personal Library</span>
           </div>
 
           <div className="flex items-center gap-4 text-[11px] font-mono">
