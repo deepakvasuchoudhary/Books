@@ -245,3 +245,194 @@
   scrollbar-width: none;
 }
 
+/* ==========================================================================
+   Apple Flowing Animations & Dynamic Tiles
+   ========================================================================== */
+
+/* 1. Flowing Prismatic Liquid Border */
+@keyframes apple-border-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.apple-flowing-border-wrap {
+  position: relative;
+  border-radius: 28px;
+  padding: 1.5px;
+  overflow: hidden;
+}
+
+.apple-flowing-border-glow {
+  position: absolute;
+  inset: -150%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    #0071e3 60deg,
+    #af52de 130deg,
+    #ff2d55 190deg,
+    #ff9f0a 250deg,
+    #34c759 310deg,
+    transparent 360deg
+  );
+  animation: apple-border-spin 8s linear infinite;
+  opacity: 0.9;
+  filter: blur(4px);
+  will-change: transform;
+}
+
+.dark .apple-flowing-border-glow {
+  opacity: 1;
+  filter: blur(5px);
+}
+
+.apple-flowing-border-inner {
+  position: relative;
+  border-radius: 26.5px;
+  width: 100%;
+  height: 100%;
+}
+
+/* 2. Flowing Ambient Aurora Blobs */
+@keyframes apple-aurora-blob-1 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -25px) scale(1.18);
+  }
+  66% {
+    transform: translate(-25px, 20px) scale(0.9);
+  }
+}
+
+@keyframes apple-aurora-blob-2 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(-35px, 20px) scale(1.12);
+  }
+  66% {
+    transform: translate(25px, -30px) scale(0.95);
+  }
+}
+
+@keyframes apple-aurora-blob-3 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(0.95);
+  }
+  50% {
+    transform: translate(20px, 25px) scale(1.15);
+  }
+}
+
+.apple-aurora-1 {
+  animation: apple-aurora-blob-1 10s ease-in-out infinite;
+  will-change: transform;
+}
+
+.apple-aurora-2 {
+  animation: apple-aurora-blob-2 12s ease-in-out infinite;
+  will-change: transform;
+}
+
+.apple-aurora-3 {
+  animation: apple-aurora-blob-3 14s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* 3. Flowing Soundwave / Reading Pulse Equalizer */
+@keyframes apple-wave-pulse {
+  0%, 100% {
+    height: 15%;
+    opacity: 0.45;
+  }
+  50% {
+    height: 95%;
+    opacity: 1;
+  }
+}
+
+.apple-wave-bar {
+  animation: apple-wave-pulse 1.3s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+  will-change: height, opacity;
+  transform-origin: bottom;
+}
+
+/* 4. Infinite Flowing Horizon Marquee */
+@keyframes apple-marquee-slide {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.apple-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: apple-marquee-slide 32s linear infinite;
+  will-change: transform;
+}
+
+.apple-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* 5. Flowing Liquid Specular Sweep */
+@keyframes apple-shimmer-sweep {
+  0% {
+    transform: translateX(-150%) rotate(25deg);
+  }
+  50%, 100% {
+    transform: translateX(250%) rotate(25deg);
+  }
+}
+
+.apple-shimmer-ray {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 100%
+  );
+  animation: apple-shimmer-sweep 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.dark .apple-shimmer-ray {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    transparent 100%
+  );
+}
+
+/* 6. Apple Rotating Orbital Ring */
+@keyframes apple-orbit-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.apple-orbit-ring {
+  animation: apple-orbit-spin 20s linear infinite;
+  will-change: transform;
+}
+
+

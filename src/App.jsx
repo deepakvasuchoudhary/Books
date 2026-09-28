@@ -278,6 +278,9 @@ export default function App() {
           onViewModeChange={handleViewModeChange}
           sortBy={sortBy}
           onSortByChange={setSortBy}
+          activeShelf={activeShelf}
+          onSelectShelf={setActiveShelf}
+          counts={counts}
           activeShelfLabel={activeShelfLabel}
           totalResults={filteredBooks.length}
           selectedGenre={selectedGenre}
@@ -297,6 +300,7 @@ export default function App() {
             availableGenres={availableGenres}
             selectedGenre={selectedGenre}
             onSelectGenre={setSelectedGenre}
+            allBooks={BOOKS}
           />
         )}
 

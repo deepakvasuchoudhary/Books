@@ -23,6 +23,9 @@ export function TopHeader({
   onViewModeChange,
   sortBy,
   onSortByChange,
+  activeShelf,
+  onSelectShelf,
+  counts,
   activeShelfLabel,
   totalResults,
   selectedGenre,
@@ -32,8 +35,17 @@ export function TopHeader({
   onResetFilters,
   isFiltered,
 }) {
+  const shelfTabs = [
+    { id: "all", label: "All Volumes", count: counts?.all },
+    { id: "reading", label: "Reading Now", count: counts?.reading, live: true },
+    { id: "five_stars", label: "5-Star Gems", count: counts?.five_stars, star: true },
+    { id: "read", label: "Completed", count: counts?.read },
+    { id: "want_to_read", label: "In Queue", count: counts?.want_to_read },
+  ];
+
   return (
-    <header className="sticky top-0 z-30 liquid-glass border-b border-black/[0.06] dark:border-white/[0.08] px-4 sm:px-6 lg:px-8 py-3 transition-colors">
+    <header className="sticky top-0 z-30 liquid-glass border-b border-black/[0.06] dark:border-white/[0.08] px-4 sm:px-6 lg:px-8 py-2.5 transition-all">
+      {/* Primary Top Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
         {/* Left: Mobile Toggle & View Title */}
         <div className="flex items-center gap-3">
@@ -60,7 +72,7 @@ export function TopHeader({
         {/* Center/Right: Search, Layout Switcher & Sort */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           {/* Apple-style Search Input */}
-          <div className="relative flex-1 sm:w-64 md:w-72">
+          <div className="relative flex-1 sm:w-60 md:w-68">
             <Search
               size={14}
               className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#86868b] dark:text-[#a1a1a6] pointer-events-none stroke-[2]"
@@ -145,7 +157,7 @@ export function TopHeader({
             />
           </div>
 
-          {/* Quick Theme Toggle (Apple Glass Capsule) */}
+          {/* Quick Theme Toggle */}
           {onToggleTheme && (
             <button
               onClick={onToggleTheme}
@@ -163,9 +175,64 @@ export function TopHeader({
         </div>
       </div>
 
+      {/* Apple Animated Fluid Navigation Strip (Subnav) */}
+      <div className="pt-2.5 mt-2 border-t border-black/[0.04] dark:border-white/[0.06] flex items-center overflow-x-auto no-scrollbar gap-1.5 sm:gap-2">
+        {shelfTabs.map((tab) => {
+          const isActive = activeShelf === tab.id && selectedGenre === "all";
+
+          return (
+            <button
+              key={tab.id}
+              onClick={() => {
+                if (onSelectShelf) onSelectShelf(tab.id);
+                if (onSelectGenre) onSelectGenre("all");
+              }}
+              className={`relative px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shrink-0 flex items-center gap-2 cursor-pointer active:scale-95 ${
+                isActive
+                  ? "liquid-glass text-[#0071e3] dark:text-[#2997ff] shadow-sm font-semibold border border-[#0071e3]/30 dark:border-[#2997ff]/40"
+                  : "text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
+              }`}
+            >
+              {/* Flowing Soundwave frequency animation for Currently Reading */}
+              {tab.live && (
+                <div className="flex items-end gap-0.5 h-3.5 w-3.5 pb-0.5">
+                  <span className="w-0.5 h-full rounded-full bg-[#34c759] apple-wave-bar" style={{ animationDelay: "0.1s" }} />
+                  <span className="w-0.5 h-full rounded-full bg-[#34c759] apple-wave-bar" style={{ animationDelay: "0.35s" }} />
+                  <span className="w-0.5 h-full rounded-full bg-[#34c759] apple-wave-bar" style={{ animationDelay: "0.2s" }} />
+                </div>
+              )}
+
+              {/* Star Gem indicator */}
+              {tab.star && (
+                <span className="text-[#ff9f0a] text-xs">★</span>
+              )}
+
+              <span>{tab.label}</span>
+
+              {tab.count !== undefined && (
+                <span
+                  className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
+                    isActive
+                      ? "bg-[#0071e3]/10 dark:bg-[#0071e3]/30 text-[#0071e3] dark:text-[#2997ff]"
+                      : "bg-black/[0.04] dark:bg-white/[0.06] text-[#86868b] dark:text-[#a1a1a6]"
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              )}
+
+              {/* Sliding Bottom Glow Indicator */}
+              {isActive && (
+                <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-gradient-to-r from-transparent via-[#0071e3] dark:via-[#2997ff] to-transparent rounded-full" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
       {/* Active Filters Pill Bar */}
       {isFiltered && (
-        <div className="flex flex-wrap items-center gap-2 pt-3 mt-2.5 border-t border-black/[0.04] dark:border-white/[0.06] text-xs">
+        <div className="flex flex-wrap items-center gap-2 pt-2.5 mt-2 border-t border-black/[0.04] dark:border-white/[0.06] text-xs">
           <span className="text-[#86868b] dark:text-[#a1a1a6] text-[11px] font-medium">
             Active filters:
           </span>
