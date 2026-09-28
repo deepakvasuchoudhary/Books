@@ -6,76 +6,80 @@ export function BookCardBento({ book, onSelectBook }) {
   return (
     <div
       onClick={() => onSelectBook(book)}
-      className="group relative rounded-2xl p-4 bg-white dark:bg-[#11131a] hover:bg-slate-50 dark:hover:bg-[#151822] border border-slate-200/80 dark:border-white/[0.08] hover:border-indigo-500/40 dark:hover:border-indigo-500/40 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer"
+      className="group relative rounded-[24px] p-5 liquid-glass liquid-glass-interactive flex flex-col justify-between cursor-pointer active:scale-[0.98]"
     >
       <div>
-        <div className="flex items-center justify-between pb-3 text-xs">
+        {/* Top Chips Row */}
+        <div className="flex items-center justify-between pb-3.5 text-xs">
           <div className="flex items-center gap-1.5">
             {book.genres?.[0] ? (
-              <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-zinc-400 font-mono text-[10px] uppercase tracking-wider font-semibold">
+              <span className="px-2.5 py-0.5 rounded-full liquid-glass-subtle text-[#86868b] dark:text-[#a1a1a6] font-mono text-[10px] uppercase tracking-wider font-semibold">
                 {book.genres[0]}
               </span>
             ) : (
-              <span className="text-[10px] font-mono text-slate-400">Archive</span>
+              <span className="text-[10px] font-mono text-[#86868b]">Vault</span>
             )}
             {book.status === "reading" && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] font-semibold border border-emerald-500/20">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#34c759]/10 text-[#34c759] font-mono text-[10px] font-semibold border border-[#34c759]/20">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#34c759] animate-pulse"></span>
                 <span>Reading</span>
               </span>
             )}
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 font-mono text-[10px] font-bold border border-amber-200/50 dark:border-amber-800/50">
+            <span className="px-2.5 py-0.5 rounded-full liquid-glass-subtle text-[#ff9f0a] font-mono text-[10px] font-bold border border-[#ff9f0a]/20">
               ★ {book.rating || 5}.0
             </span>
           </div>
         </div>
 
-        <div className="py-2 flex justify-center">
-          <div className="group-hover:scale-105 transition-transform duration-300">
+        {/* 3D Book Presentation */}
+        <div className="py-3 flex justify-center">
+          <div className="group-hover:scale-105 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] book-spine-depth">
             <BookCover
               coverUrl={book.coverUrl}
               title={book.title}
               author={book.author}
               size="md"
-              className="shadow-md"
+              className="shadow-xl"
             />
           </div>
         </div>
 
+        {/* Book Typography & Details */}
         <div className="pt-3 space-y-1">
-          <div className="flex items-baseline justify-between gap-1">
-            <h3 className="font-bold text-sm text-slate-900 dark:text-white line-clamp-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+          <div className="flex items-baseline justify-between gap-1.5">
+            <h3 className="font-semibold text-sm text-[#1d1d1f] dark:text-[#f5f5f7] line-clamp-1 group-hover:text-[#0071e3] dark:group-hover:text-[#2997ff] transition-colors">
               {book.title}
             </h3>
-            <div className="flex items-center gap-1 text-[11px] font-mono text-slate-400 dark:text-zinc-500 shrink-0">
+            <div className="flex items-center gap-1 text-[11px] font-mono text-[#86868b] dark:text-[#a1a1a6] shrink-0">
               {book.pages && <span>{book.pages}p</span>}
               {book.pages && book.publishedYear && <span>·</span>}
               {book.publishedYear && <span>{book.publishedYear}</span>}
             </div>
           </div>
 
-          <p className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-1 font-medium">
+          <p className="text-xs text-[#86868b] dark:text-[#a1a1a6] line-clamp-1 font-normal">
             {book.author}
           </p>
 
-          <p className="text-[11px] text-slate-600 dark:text-zinc-400 line-clamp-2 leading-relaxed pt-1">
+          <p className="text-[11px] text-[#86868b] dark:text-[#a1a1a6] line-clamp-2 leading-relaxed pt-1 font-normal">
             {book.description || "Curated literary volume in personal library archive."}
           </p>
         </div>
       </div>
 
-      <div className="pt-3 mt-3 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs">
-        <span className="text-[11px] text-slate-400 dark:text-zinc-500 font-medium group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors flex items-center gap-1">
+      {/* Card Action Footer */}
+      <div className="pt-3.5 mt-3 border-t border-black/[0.04] dark:border-white/[0.06] flex items-center justify-between text-xs">
+        <span className="text-[11px] text-[#86868b] dark:text-[#a1a1a6] font-medium group-hover:text-[#0071e3] dark:group-hover:text-[#2997ff] transition-colors flex items-center gap-1">
           <span>Read dossier</span>
           <ArrowUpRight size={12} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </span>
 
         {book.favorite && (
-          <span className="inline-flex items-center gap-1 text-[11px] text-rose-500 font-medium">
-            <Heart size={12} className="fill-rose-500" />
+          <span className="inline-flex items-center gap-1 text-[11px] text-[#ff2d55] font-medium">
+            <Heart size={12} className="fill-[#ff2d55]" />
             <span>Fav</span>
           </span>
         )}

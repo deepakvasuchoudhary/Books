@@ -33,25 +33,25 @@ export function TopHeader({
   isFiltered,
 }) {
   return (
-    <header className="sticky top-0 z-30 bg-white/80 dark:bg-[#090a0f]/80 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/[0.08] px-4 sm:px-6 py-3.5 transition-colors">
+    <header className="sticky top-0 z-30 liquid-glass border-b border-black/[0.06] dark:border-white/[0.08] px-4 sm:px-6 lg:px-8 py-3 transition-colors">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
         {/* Left: Mobile Toggle & View Title */}
         <div className="flex items-center gap-3">
           <button
             onClick={onOpenMobileMenu}
-            className="p-2 -ml-1 rounded-xl text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-white/[0.08] lg:hidden transition-colors"
+            className="p-2 -ml-1 rounded-xl text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] lg:hidden transition-colors cursor-pointer"
             aria-label="Open sidebar navigation"
           >
-            <Menu size={20} />
+            <Menu size={20} className="stroke-[1.75]" />
           </button>
 
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-base sm:text-lg font-semibold text-[#1d1d1f] dark:text-[#f5f5f7] tracking-tight">
                 {selectedGenre !== "all" ? `#${selectedGenre}` : activeShelfLabel}
               </h1>
-              <span className="text-xs font-mono font-medium px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.08] text-slate-600 dark:text-zinc-300">
-                {totalResults} {totalResults === 1 ? "Book" : "Books"}
+              <span className="text-xs font-mono font-medium px-2.5 py-0.5 rounded-full liquid-glass-subtle text-[#86868b] dark:text-[#a1a1a6]">
+                {totalResults} {totalResults === 1 ? "Volume" : "Volumes"}
               </span>
             </div>
           </div>
@@ -59,78 +59,78 @@ export function TopHeader({
 
         {/* Center/Right: Search, Layout Switcher & Sort */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          {/* Modern Search Input */}
+          {/* Apple-style Search Input */}
           <div className="relative flex-1 sm:w-64 md:w-72">
             <Search
-              size={15}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500 pointer-events-none"
+              size={14}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#86868b] dark:text-[#a1a1a6] pointer-events-none stroke-[2]"
             />
             <input
               ref={searchInputRef}
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Search title, author, themes..."
-              className="w-full pl-9 pr-8 py-2 bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200/60 dark:hover:bg-white/[0.08] focus:bg-white dark:focus:bg-zinc-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 text-xs rounded-xl border border-slate-200/70 dark:border-white/[0.08] focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all"
+              placeholder="Search library..."
+              className="w-full pl-9 pr-8 py-1.5 liquid-glass-subtle hover:bg-white/80 dark:hover:bg-white/[0.08] focus:bg-white dark:focus:bg-[#18181c] text-[#1d1d1f] dark:text-[#f5f5f7] placeholder-[#86868b] dark:placeholder-[#6e6e73] text-xs rounded-full border border-black/[0.08] dark:border-white/[0.1] focus:border-[#0071e3] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 transition-all font-normal"
             />
             {searchQuery ? (
               <button
                 onClick={() => onSearchChange("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 p-0.5"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#86868b] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7] p-0.5 cursor-pointer"
                 title="Clear search"
               >
                 <X size={14} />
               </button>
             ) : (
-              <kbd className="hidden sm:inline-block absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white dark:bg-zinc-800 text-slate-400 dark:text-zinc-500 border border-slate-200 dark:border-zinc-700 shadow-xs pointer-events-none">
+              <kbd className="hidden sm:inline-block absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-black/[0.04] dark:bg-white/[0.08] text-[#86868b] dark:text-[#a1a1a6] pointer-events-none border border-black/[0.04] dark:border-white/[0.06]">
                 /
               </kbd>
             )}
           </div>
 
-          {/* View Mode Switcher */}
-          <div className="flex items-center p-1 bg-slate-100 dark:bg-white/[0.05] rounded-xl border border-slate-200/70 dark:border-white/[0.08]">
+          {/* Apple Segmented View Mode Switcher */}
+          <div className="apple-segmented-group flex items-center">
             <button
               onClick={() => onViewModeChange("bento")}
-              title="Bento Grid View"
-              className={`p-1.5 rounded-lg transition-all ${
+              title="Bento Grid"
+              className={`p-1.5 rounded-[9px] transition-all cursor-pointer ${
                 viewMode === "bento"
-                  ? "bg-white dark:bg-zinc-800 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                  : "text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200"
+                  ? "apple-segmented-active text-[#1d1d1f] dark:text-white"
+                  : "text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7]"
               }`}
             >
-              <LayoutGrid size={15} />
+              <LayoutGrid size={14} className="stroke-[2]" />
             </button>
             <button
               onClick={() => onViewModeChange("cover")}
-              title="Apple Books Cover Wall"
-              className={`p-1.5 rounded-lg transition-all ${
+              title="Gallery Wall"
+              className={`p-1.5 rounded-[9px] transition-all cursor-pointer ${
                 viewMode === "cover"
-                  ? "bg-white dark:bg-zinc-800 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                  : "text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200"
+                  ? "apple-segmented-active text-[#1d1d1f] dark:text-white"
+                  : "text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7]"
               }`}
             >
-              <Sparkles size={15} />
+              <Sparkles size={14} className="stroke-[2]" />
             </button>
             <button
               onClick={() => onViewModeChange("table")}
-              title="Linear Catalog Table"
-              className={`p-1.5 rounded-lg transition-all ${
+              title="Catalog Table"
+              className={`p-1.5 rounded-[9px] transition-all cursor-pointer ${
                 viewMode === "table"
-                  ? "bg-white dark:bg-zinc-800 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                  : "text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200"
+                  ? "apple-segmented-active text-[#1d1d1f] dark:text-white"
+                  : "text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7]"
               }`}
             >
-              <TableIcon size={15} />
+              <TableIcon size={14} className="stroke-[2]" />
             </button>
           </div>
 
-          {/* Sort Selector */}
+          {/* Sort Selector in Liquid Glass */}
           <div className="relative">
             <select
               value={sortBy}
               onChange={(e) => onSortByChange(e.target.value)}
-              className="appearance-none pl-3 pr-8 py-2 bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200/60 dark:hover:bg-white/[0.08] text-slate-700 dark:text-zinc-300 text-xs font-medium rounded-xl border border-slate-200/70 dark:border-white/[0.08] focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer"
+              className="appearance-none pl-3 pr-8 py-1.5 liquid-glass-subtle hover:bg-white/80 dark:hover:bg-white/[0.08] text-[#1d1d1f] dark:text-[#f5f5f7] text-xs font-medium rounded-full border border-black/[0.08] dark:border-white/[0.1] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 cursor-pointer"
             >
               <option value="recent_read">Sort: Default</option>
               <option value="rating_high">Sort: Highest Rated</option>
@@ -140,23 +140,23 @@ export function TopHeader({
               <option value="year_asc">Sort: Year (Oldest)</option>
             </select>
             <ArrowUpDown
-              size={12}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500 pointer-events-none"
+              size={11}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#86868b] dark:text-[#a1a1a6] pointer-events-none"
             />
           </div>
 
-          {/* Quick Theme Toggle */}
+          {/* Quick Theme Toggle (Apple Glass Capsule) */}
           {onToggleTheme && (
             <button
               onClick={onToggleTheme}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200/70 dark:hover:bg-white/[0.1] text-slate-700 dark:text-zinc-300 border border-slate-200/70 dark:border-white/[0.08] transition-colors cursor-pointer"
+              className="p-2 rounded-full liquid-glass-subtle hover:bg-white/90 dark:hover:bg-white/[0.12] text-[#1d1d1f] dark:text-[#f5f5f7] border border-black/[0.08] dark:border-white/[0.1] transition-all cursor-pointer active:scale-95 shadow-xs"
               title={`Switch to ${theme === "dark" ? "Light" : "Dark"} Mode`}
               aria-label="Toggle color theme"
             >
               {theme === "dark" ? (
-                <Sun size={15} className="text-amber-400" />
+                <Sun size={14} className="text-[#ff9f0a] stroke-[2]" />
               ) : (
-                <Moon size={15} className="text-indigo-600" />
+                <Moon size={14} className="text-[#0071e3] stroke-[2]" />
               )}
             </button>
           )}
@@ -165,17 +165,17 @@ export function TopHeader({
 
       {/* Active Filters Pill Bar */}
       {isFiltered && (
-        <div className="flex flex-wrap items-center gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-white/[0.06] text-xs">
-          <span className="text-slate-400 dark:text-zinc-500 text-[11px] font-medium">
+        <div className="flex flex-wrap items-center gap-2 pt-3 mt-2.5 border-t border-black/[0.04] dark:border-white/[0.06] text-xs">
+          <span className="text-[#86868b] dark:text-[#a1a1a6] text-[11px] font-medium">
             Active filters:
           </span>
 
           {selectedGenre !== "all" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-medium text-[11px] border border-indigo-200 dark:border-indigo-800">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full liquid-glass text-[#0071e3] dark:text-[#2997ff] font-medium text-[11px] border border-[#0071e3]/30">
               Genre: #{selectedGenre}
               <button
                 onClick={() => onSelectGenre("all")}
-                className="hover:text-indigo-900 dark:hover:text-indigo-100"
+                className="hover:opacity-70 cursor-pointer"
               >
                 <X size={12} />
               </button>
@@ -183,11 +183,11 @@ export function TopHeader({
           )}
 
           {ratingFilter !== "all" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 font-medium text-[11px] border border-amber-200 dark:border-amber-800">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full liquid-glass text-[#ff9f0a] dark:text-[#ffb340] font-medium text-[11px] border border-[#ff9f0a]/30">
               Rating: {ratingFilter}★
               <button
                 onClick={() => onRatingFilterChange("all")}
-                className="hover:text-amber-900 dark:hover:text-amber-100"
+                className="hover:opacity-70 cursor-pointer"
               >
                 <X size={12} />
               </button>
@@ -195,11 +195,11 @@ export function TopHeader({
           )}
 
           {searchQuery && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-zinc-300 font-medium text-[11px]">
-              Query: "{searchQuery}"
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full liquid-glass text-[#1d1d1f] dark:text-[#f5f5f7] font-medium text-[11px] border border-black/[0.08] dark:border-white/[0.12]">
+              "{searchQuery}"
               <button
                 onClick={() => onSearchChange("")}
-                className="hover:text-slate-900 dark:hover:text-white"
+                className="hover:opacity-70 cursor-pointer"
               >
                 <X size={12} />
               </button>
@@ -208,7 +208,7 @@ export function TopHeader({
 
           <button
             onClick={onResetFilters}
-            className="text-[11px] font-medium text-slate-500 hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400 flex items-center gap-1 ml-auto cursor-pointer"
+            className="text-[11px] font-medium text-[#86868b] hover:text-[#0071e3] dark:text-[#a1a1a6] dark:hover:text-[#2997ff] flex items-center gap-1 ml-auto cursor-pointer transition-colors"
           >
             <FilterX size={12} />
             <span>Reset All</span>

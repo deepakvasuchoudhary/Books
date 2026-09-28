@@ -239,7 +239,14 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#090a0f] text-slate-900 dark:text-zinc-100 flex transition-colors duration-200">
+    <div className="min-h-screen bg-[#f5f5f7] dark:bg-[#000000] text-[#1d1d1f] dark:text-[#f5f5f7] flex transition-colors duration-300 relative overflow-x-hidden selection:bg-[#0071e3]/20 selection:text-[#0071e3]">
+      {/* Background Optical Refraction Atmosphere (Apple Liquid Glass Glow) */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-400/20 via-indigo-500/15 to-transparent blur-[120px] dark:from-blue-600/20 dark:via-indigo-600/10" />
+        <div className="absolute top-[35%] -right-32 w-[550px] h-[550px] rounded-full bg-gradient-to-bl from-purple-400/15 via-rose-400/10 to-transparent blur-[120px] dark:from-purple-900/25 dark:via-pink-900/15" />
+        <div className="absolute -bottom-32 left-[20%] w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-cyan-400/15 via-teal-400/10 to-transparent blur-[120px] dark:from-cyan-900/15 dark:via-teal-900/10" />
+      </div>
+
       {/* 1. Sleek Modern Sidebar */}
       <Sidebar
         isOpen={isMobileSidebarOpen}
@@ -258,8 +265,8 @@ export default function App() {
       />
 
       {/* 2. Main Content Canvas */}
-      <div className="flex-1 lg:pl-72 flex flex-col min-w-0 min-h-screen">
-        {/* Modern Sticky Top Bar */}
+      <div className="flex-1 lg:pl-72 flex flex-col min-w-0 min-h-screen relative z-10">
+        {/* Apple Liquid Glass Sticky Header */}
         <TopHeader
           onOpenMobileMenu={() => setIsMobileSidebarOpen(true)}
           theme={theme}
@@ -294,12 +301,12 @@ export default function App() {
         )}
 
         {/* Main Books Presentation Area */}
-        <main className="flex-1 p-4 sm:p-6">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
           {filteredBooks.length > 0 ? (
             <>
               {/* Layout 1: Bento Grid View */}
               {viewMode === "bento" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                   {filteredBooks.map((book) => (
                     <BookCardBento
                       key={book.id}
@@ -327,24 +334,24 @@ export default function App() {
               )}
             </>
           ) : (
-            /* Empty State */
-            <div className="py-20 text-center space-y-4 max-w-md mx-auto">
-              <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.08] flex items-center justify-center mx-auto text-slate-400 dark:text-zinc-500">
-                <SearchX size={26} />
+            /* Apple Glass Empty State */
+            <div className="py-24 text-center space-y-5 max-w-md mx-auto">
+              <div className="w-16 h-16 rounded-[22px] liquid-glass flex items-center justify-center mx-auto text-[#86868b] dark:text-[#a1a1a6] shadow-sm">
+                <SearchX size={28} className="stroke-[1.75]" />
               </div>
 
-              <div className="space-y-1">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+              <div className="space-y-1.5">
+                <h3 className="text-lg font-semibold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7]">
                   No matching books found
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-zinc-400">
-                  We couldn't find any volume matching your current search or filters.
+                <p className="text-xs text-[#86868b] dark:text-[#a1a1a6] leading-relaxed">
+                  We couldn't find any volume matching your current search criteria or active filters.
                 </p>
               </div>
 
               <button
                 onClick={handleResetFilters}
-                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                className="apple-btn-primary px-5 py-2.5 rounded-full text-xs font-medium cursor-pointer"
               >
                 Reset All Filters
               </button>
@@ -352,18 +359,18 @@ export default function App() {
           )}
         </main>
 
-        {/* Modern Minimalist Footer */}
-        <footer className="px-6 py-5 border-t border-slate-200/80 dark:border-white/[0.08] text-xs text-slate-500 dark:text-zinc-500 flex flex-col sm:flex-row items-center justify-between gap-3">
+        {/* Apple Style Liquid Glass Minimalist Footer */}
+        <footer className="mt-auto px-6 lg:px-8 py-6 border-t border-black/[0.06] dark:border-white/[0.08] text-xs text-[#86868b] dark:text-[#a1a1a6] flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 font-medium">
-            <span className="font-bold text-slate-800 dark:text-zinc-300 tracking-wide">LITTLE NALANDA</span>
+            <span className="font-semibold text-[#1d1d1f] dark:text-[#f5f5f7] tracking-tight">Little Nalanda</span>
             <span>•</span>
-            <span>Deepak Choudhary's Personal Library</span>
+            <span>Personal Library by Deepak Choudhary</span>
           </div>
 
           <div className="flex items-center gap-4 text-[11px] font-mono">
             <span>81 Volumes Indexed</span>
             <span>•</span>
-            <span>100% Curated</span>
+            <span>Designed in Cupertino Aesthetic</span>
           </div>
         </footer>
       </div>

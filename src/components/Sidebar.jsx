@@ -72,76 +72,76 @@ export function Sidebar({
       {/* Mobile Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden transition-opacity"
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-md lg:hidden transition-opacity"
           onClick={onClose}
           aria-hidden="true"
         />
       )}
 
-      {/* Sidebar Container */}
+      {/* Apple Liquid Glass Sidebar Container */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-72 bg-white/95 dark:bg-[#0c0e14]/95 backdrop-blur-xl border-r border-slate-200/80 dark:border-white/[0.08] flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-72 liquid-glass border-r border-black/[0.06] dark:border-white/[0.08] flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] lg:translate-x-0 ${
           isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
         }`}
       >
         {/* Brand Header */}
-        <div className="p-5 flex items-center justify-between border-b border-slate-100 dark:border-white/[0.06]">
+        <div className="p-5 flex items-center justify-between border-b border-black/[0.04] dark:border-white/[0.06]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25">
-              <Layers size={18} className="stroke-[2.5]" />
+            <div className="w-9 h-9 rounded-[12px] bg-gradient-to-tr from-[#0071e3] via-[#0077ed] to-[#42a5f5] flex items-center justify-center text-white shadow-md shadow-blue-500/25">
+              <Layers size={18} className="stroke-[2.2]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-sm tracking-tight text-slate-900 dark:text-white">
+                <span className="font-semibold text-sm tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7]">
                   Little Nalanda
                 </span>
-                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-mono font-medium bg-[#34c759]/10 text-[#34c759] border border-[#34c759]/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#34c759] animate-pulse" />
                   Synced
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-medium">
-                Deepak's Personal Library
+              <p className="text-[11px] text-[#86868b] dark:text-[#a1a1a6] font-normal">
+                Curated by Deepak Choudhary
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] lg:hidden"
+            className="p-1.5 rounded-xl text-[#86868b] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] lg:hidden cursor-pointer"
             aria-label="Close sidebar"
           >
             <X size={18} />
           </button>
         </div>
 
-        {/* Quick Search Shortcut Bar */}
+        {/* Quick Search Apple Glass Bar */}
         <div className="px-4 pt-4 pb-2">
           <button
             onClick={() => {
               onOpenSearch();
               if (window.innerWidth < 1024) onClose();
             }}
-            className="w-full flex items-center justify-between px-3 py-2 text-xs text-slate-400 dark:text-zinc-400 bg-slate-100 dark:bg-white/[0.04] hover:bg-slate-200/70 dark:hover:bg-white/[0.08] rounded-xl border border-slate-200/60 dark:border-white/[0.06] transition-all cursor-pointer group"
+            className="w-full flex items-center justify-between px-3.5 py-2 text-xs text-[#86868b] dark:text-[#a1a1a6] liquid-glass-subtle hover:bg-white/80 dark:hover:bg-white/[0.08] rounded-xl border border-black/[0.06] dark:border-white/[0.08] transition-all cursor-pointer group active:scale-[0.98]"
           >
-            <div className="flex items-center gap-2">
-              <Compass size={14} className="text-slate-400 group-hover:text-indigo-500 transition-colors" />
-              <span className="font-medium text-slate-600 dark:text-zinc-300">Quick Search...</span>
+            <div className="flex items-center gap-2.5">
+              <Compass size={14} className="text-[#86868b] group-hover:text-[#0071e3] transition-colors" />
+              <span className="font-normal text-[#1d1d1f] dark:text-[#f5f5f7]">Quick Search...</span>
             </div>
-            <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 border border-slate-200 dark:border-zinc-700 shadow-xs">
+            <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-black/[0.04] dark:bg-white/[0.08] text-[#86868b] dark:text-[#a1a1a6] border border-black/[0.04] dark:border-white/[0.06]">
               ⌘K
             </kbd>
           </button>
         </div>
 
         {/* Scrollable Navigation Area */}
-        <div className="flex-1 overflow-y-auto px-3 py-2 space-y-6">
+        <div className="flex-1 overflow-y-auto px-3.5 py-2 space-y-6">
           {/* Main Shelves */}
           <div>
-            <div className="px-2 pb-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-400 font-semibold">
+            <div className="px-2 pb-2 text-[10px] font-mono uppercase tracking-wider text-[#86868b] dark:text-[#a1a1a6] font-semibold">
               Library Shelves
             </div>
-            <nav className="space-y-0.5">
+            <nav className="space-y-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeShelf === item.id && selectedGenre === "all";
@@ -154,27 +154,27 @@ export function Sidebar({
                       onSelectGenre("all");
                       if (window.innerWidth < 1024) onClose();
                     }}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer group ${
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer group active:scale-[0.98] ${
                       isActive
-                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20 font-semibold"
-                        : "text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-white/[0.05]"
+                        ? "bg-[#0071e3] text-white shadow-md shadow-blue-500/25 font-medium apple-gloss-sheen"
+                        : "text-[#1d1d1f]/80 dark:text-[#f5f5f7]/80 hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <Icon
                         size={15}
-                        className={`${isActive ? "text-white" : item.color} shrink-0`}
+                        className={`${isActive ? "text-white" : item.color} shrink-0 stroke-[2]`}
                       />
                       <span className="truncate">{item.label}</span>
                       {item.pulse && !isActive && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#34c759] animate-pulse shrink-0" />
                       )}
                     </div>
                     <span
                       className={`text-[11px] font-mono px-2 py-0.5 rounded-full ${
                         isActive
                           ? "bg-white/20 text-white"
-                          : "text-slate-400 dark:text-zinc-400 bg-slate-100 dark:bg-white/[0.04]"
+                          : "text-[#86868b] dark:text-[#a1a1a6] bg-black/[0.04] dark:bg-white/[0.05]"
                       }`}
                     >
                       {item.count}
@@ -188,10 +188,10 @@ export function Sidebar({
           {/* Curated Categories / Genres */}
           <div>
             <div className="px-2 pb-2 flex items-center justify-between">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-400 font-semibold">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#86868b] dark:text-[#a1a1a6] font-semibold">
                 Curated Topics
               </span>
-              <span className="text-[10px] font-mono text-slate-400 dark:text-zinc-400">
+              <span className="text-[10px] font-mono text-[#86868b] dark:text-[#a1a1a6]">
                 {availableGenres.length} Topics
               </span>
             </div>
@@ -207,14 +207,14 @@ export function Sidebar({
                       onSelectGenre(isSelected ? "all" : genre);
                       if (window.innerWidth < 1024) onClose();
                     }}
-                    className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
+                    className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
                       isSelected
-                        ? "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-semibold border border-indigo-200/60 dark:border-indigo-800/60"
-                        : "text-slate-500 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-white/[0.04]"
+                        ? "bg-[#0071e3]/10 dark:bg-[#0071e3]/20 text-[#0071e3] dark:text-[#2997ff] font-medium border border-[#0071e3]/25"
+                        : "text-[#86868b] dark:text-[#a1a1a6] hover:bg-black/[0.04] dark:hover:bg-white/[0.04]"
                     }`}
                   >
                     <span className="truncate pr-2">#{genre}</span>
-                    <span className="text-[10px] font-mono text-slate-400 dark:text-zinc-400 shrink-0">
+                    <span className="text-[10px] font-mono opacity-60 shrink-0">
                       {count}
                     </span>
                   </button>
@@ -225,31 +225,31 @@ export function Sidebar({
         </div>
 
         {/* Sidebar Footer */}
-        <div className="p-3 border-t border-slate-100 dark:border-white/[0.06] space-y-2">
-          {/* Surprise Me Button */}
+        <div className="p-3.5 border-t border-black/[0.04] dark:border-white/[0.06] space-y-2.5">
+          {/* Surprise Me Apple Button */}
           <button
             onClick={() => {
               onOpenRandom();
               if (window.innerWidth < 1024) onClose();
             }}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-slate-100 dark:bg-white/[0.05] hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-400 text-slate-700 dark:text-zinc-200 text-xs font-semibold border border-slate-200/60 dark:border-white/[0.06] transition-all cursor-pointer group shadow-xs"
+            className="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl liquid-glass-subtle hover:bg-white/80 dark:hover:bg-white/[0.08] text-[#1d1d1f] dark:text-[#f5f5f7] text-xs font-medium border border-black/[0.06] dark:border-white/[0.08] transition-all cursor-pointer group active:scale-[0.98] shadow-xs"
           >
-            <Dices size={15} className="group-hover:rotate-45 transition-transform duration-300 text-indigo-500" />
-            <span>Discover Random Book</span>
+            <Dices size={15} className="group-hover:rotate-45 transition-transform duration-300 text-[#0071e3]" />
+            <span>Discover Random Volume</span>
           </button>
 
-          {/* Theme Switcher */}
+          {/* Theme Switcher Capsule */}
           <div className="flex items-center justify-between px-2 pt-1">
-            <span className="text-xs text-slate-500 dark:text-zinc-400 font-medium flex items-center gap-1.5">
-              {theme === "dark" ? <Moon size={13} className="text-indigo-400" /> : <Sun size={13} className="text-amber-500" />}
+            <span className="text-xs text-[#86868b] dark:text-[#a1a1a6] font-normal flex items-center gap-1.5">
+              {theme === "dark" ? <Moon size={13} className="text-[#0071e3]" /> : <Sun size={13} className="text-[#ff9f0a]" />}
               <span>{theme === "dark" ? "Dark Mode" : "Light Mode"}</span>
             </span>
 
             <button
               onClick={onToggleTheme}
-              className="px-2.5 py-1 text-xs rounded-lg bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-zinc-300 font-medium transition-colors cursor-pointer"
+              className="px-2.5 py-1 text-xs rounded-full liquid-glass-subtle hover:bg-white/90 dark:hover:bg-white/[0.1] text-[#1d1d1f] dark:text-[#f5f5f7] font-medium border border-black/[0.06] dark:border-white/[0.08] transition-all cursor-pointer active:scale-95"
             >
-              Switch to {theme === "dark" ? "Light" : "Dark"}
+              Switch
             </button>
           </div>
         </div>

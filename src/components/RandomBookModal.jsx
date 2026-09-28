@@ -41,73 +41,74 @@ export function RandomBookModal({
   if (!isOpen || !book) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/40 backdrop-blur-md animate-in fade-in duration-300">
       <div className="fixed inset-0" onClick={onClose} />
 
-      <div className="relative w-full max-w-lg bg-white dark:bg-[#11131c] text-slate-900 dark:text-white rounded-3xl shadow-2xl border border-slate-200/80 dark:border-white/[0.1] overflow-hidden z-10 my-8 p-6 sm:p-7">
-        <div className="absolute -top-20 -right-20 w-52 h-52 bg-indigo-500/10 dark:bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative w-full max-w-lg liquid-glass text-[#1d1d1f] dark:text-[#f5f5f7] rounded-[28px] shadow-2xl overflow-hidden z-10 my-8 p-6 sm:p-7 liquid-glass-interactive">
+        {/* Apple Optical Glow Refraction Inside Modal */}
+        <div className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-[#0071e3]/20 via-[#42a5f5]/15 to-transparent rounded-full blur-3xl pointer-events-none" />
 
-        <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-white/[0.06]">
-          <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-mono text-xs uppercase tracking-wider font-semibold">
+        <div className="flex items-center justify-between pb-4 border-b border-black/[0.04] dark:border-white/[0.06]">
+          <div className="flex items-center gap-2 text-[#0071e3] dark:text-[#2997ff] font-mono text-xs uppercase tracking-wider font-semibold">
             <Sparkles size={15} />
             <span>Little Nalanda Discovery</span>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-zinc-200 rounded-lg hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors"
+            className="p-1.5 rounded-full liquid-glass-subtle text-[#86868b] hover:text-[#1d1d1f] dark:hover:text-white transition-colors cursor-pointer"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
-        <div className="py-5 flex flex-col sm:flex-row items-center sm:items-start gap-5">
-          <div className="shrink-0">
+        <div className="py-6 flex flex-col sm:flex-row items-center sm:items-start gap-6">
+          <div className="shrink-0 book-spine-depth">
             <BookCover
               coverUrl={book.coverUrl}
               title={book.title}
               author={book.author}
               size="md"
-              className="shadow-xl"
+              className="shadow-2xl"
             />
           </div>
 
-          <div className="flex-1 text-center sm:text-left space-y-2 min-w-0">
+          <div className="flex-1 text-center sm:text-left space-y-2.5 min-w-0">
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs">
               {book.publishedYear && (
-                <span className="font-mono text-slate-400 dark:text-zinc-500">
+                <span className="font-mono text-[#86868b]">
                   {book.publishedYear}
                 </span>
               )}
               {book.genres?.[0] && (
-                <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-medium text-[11px] border border-indigo-200/50 dark:border-indigo-800/50">
+                <span className="px-2.5 py-0.5 rounded-full liquid-glass-subtle text-[#0071e3] dark:text-[#2997ff] font-medium text-[11px] border border-[#0071e3]/20">
                   #{book.genres[0]}
                 </span>
               )}
             </div>
 
-            <h3 className="font-bold text-lg text-slate-900 dark:text-white leading-snug">
+            <h3 className="font-semibold text-lg text-[#1d1d1f] dark:text-[#f5f5f7] leading-snug">
               {book.title}
             </h3>
-            <p className="text-xs font-medium text-slate-600 dark:text-zinc-400">
-              by <span className="text-slate-900 dark:text-zinc-200 font-semibold">{book.author}</span>
+            <p className="text-xs font-normal text-[#86868b] dark:text-[#a1a1a6]">
+              by <span className="text-[#1d1d1f] dark:text-[#f5f5f7] font-semibold">{book.author}</span>
             </p>
 
             <div className="pt-1 flex justify-center sm:justify-start">
               <StarRating rating={book.rating || 5} size={14} />
             </div>
 
-            <p className="text-xs text-slate-600 dark:text-zinc-400 line-clamp-3 leading-relaxed pt-1">
+            <p className="text-xs text-[#86868b] dark:text-[#a1a1a6] line-clamp-3 leading-relaxed pt-1 font-normal">
               {book.description || "A cornerstone volume in this curated personal archive."}
             </p>
           </div>
         </div>
 
-        <div className="pt-4 border-t border-slate-100 dark:border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="pt-4 border-t border-black/[0.04] dark:border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3">
           <button
             onClick={onPickAnother}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-700 dark:text-zinc-300 text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-full liquid-glass-subtle hover:bg-white/80 dark:hover:bg-white/[0.08] text-[#1d1d1f] dark:text-[#f5f5f7] text-xs font-medium flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 border border-black/[0.06] dark:border-white/[0.08]"
           >
-            <Dices size={15} className="text-indigo-500" />
+            <Dices size={15} className="text-[#0071e3]" />
             <span>Draw Another (R)</span>
           </button>
 
@@ -116,7 +117,7 @@ export function RandomBookModal({
               onSelectBook(book);
               onClose();
             }}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center justify-center gap-2 shadow-md shadow-indigo-600/20 transition-colors cursor-pointer"
+            className="w-full sm:w-auto apple-btn-primary px-5 py-2.5 rounded-full text-xs font-medium flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>Open Reader Dossier</span>
             <ArrowRight size={14} />

@@ -46,6 +46,9 @@ export function BookCover({
               className={`w-full h-full object-cover transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
               loading="lazy"
             />
+            {/* Apple 3D Book Spine Lighting Highlight */}
+            <div className="absolute inset-y-0 left-0 w-3 bg-gradient-to-r from-black/25 via-white/20 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 ring-1 ring-inset ring-white/15 dark:ring-white/10 pointer-events-none rounded-[inherit]" />
           </>
         ) : (
           /* Modern Minimalist Typographic Cover Fallback */
